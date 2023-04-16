@@ -1,4 +1,4 @@
-package com.serratec.Utils;
+package com.serratec.utils;
 
 import java.sql.Date;
 import java.time.LocalDate;

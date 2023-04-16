@@ -1,6 +1,6 @@
 package com.serratec.domain.models;
 
-import com.serratec.Utils.Util;
+import com.serratec.utils.Util;
 
 public class Cliente extends Pessoa {
     private int idCliente;

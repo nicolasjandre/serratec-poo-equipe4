@@ -1,6 +1,6 @@
 package com.serratec.domain.repository;
 
-import com.serratec.Utils.Util;
+import com.serratec.utils.Util;
 import com.serratec.domain.models.Cliente;
 import com.serratec.domain.settings.Conexao;
 
