@@ -4,7 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2fe9a193-2876-4f4b-adb1-8ab32c13e4c5" name="Changes" comment=":rocket: eclipse included" />
+    <list default="true" id="2fe9a193-2876-4f4b-adb1-8ab32c13e4c5" name="Changes" comment=":rocket: eclipse included">
+      <change afterPath="$PROJECT_DIR$/src/com/serratec/domain/services/ClienteService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Equipe6-TrabalhoFinalPOO/com/serratec/Utils/Util.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Equipe6-TrabalhoFinalPOO/com/serratec/domain/models/Cliente.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Equipe6-TrabalhoFinalPOO/com/serratec/domain/models/Cliente.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Equipe6-TrabalhoFinalPOO/com/serratec/domain/repository/ClienteRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Equipe6-TrabalhoFinalPOO/com/serratec/domain/repository/ClienteRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Equipe6-TrabalhoFinalPOO/com/serratec/domain/repository/MainRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Equipe6-TrabalhoFinalPOO/com/serratec/domain/repository/MainRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/serratec/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/serratec/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/serratec/domain/files/ArquivoTxt.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/serratec/domain/files/ArquivoTxt.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/serratec/domain/repository/ClienteRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/serratec/domain/repository/ClienteRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/serratec/domain/repository/MainRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/serratec/domain/repository/MainRepository.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -86,7 +97,14 @@
       <option name="project" value="LOCAL" />
       <updated>1681677059395</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary=":rocket: eclipse included">
+      <created>1681678208253</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1681678208253</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -104,5 +122,16 @@
     <MESSAGE value="first commit" />
     <MESSAGE value=":rocket: eclipse included" />
     <option name="LAST_COMMIT_MESSAGE" value=":rocket: eclipse included" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/serratec/domain/repository/MainRepository.java</url>
+          <line>312</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

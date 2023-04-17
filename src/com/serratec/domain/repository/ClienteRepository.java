@@ -46,7 +46,6 @@ public class ClienteRepository {
             if (e.getLocalizedMessage().contains("is null")) {
                 System.err.println("\nCliente não incluído.\nVerifique se foi chamado o connect:\n" + e);
             } else {
-                System.err.println(e);
                 e.printStackTrace();
             }
             return 0;
@@ -118,6 +117,7 @@ public class ClienteRepository {
                 cliente.setDtNascimento(tabela.getDate("dtnascimento"));
                 cliente.setEndereco(tabela.getString("endereco"));
                 cliente.setTelefone(tabela.getString("telefone"));
+
                 clientes.add(cliente);
             }
 

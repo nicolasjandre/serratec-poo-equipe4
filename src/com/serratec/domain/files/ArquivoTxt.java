@@ -40,25 +40,25 @@ public class ArquivoTxt {
 		}
 	}
 	
-	public String lerArquivo() {		
+	public String lerArquivo() {
 		String data = "";
 		try {
-			if (Arquivo.exists()) {  
+			if (Arquivo.exists()) {
 				Scanner Linhas = new Scanner(Arquivo);
-		      
+
 				while (Linhas.hasNextLine()) {
 					data += Linhas.nextLine() + "\n";
 				}
-		
+
 				Linhas.close();
 			} else
 				System.out.println("Arquivo não existe.");
-		
+
 		} catch (FileNotFoundException e) {
 		      System.out.println("Ocorreu um erro na leitura.");
 		      e.printStackTrace();
 		}
-		
+
 		return data;
 	}
 	

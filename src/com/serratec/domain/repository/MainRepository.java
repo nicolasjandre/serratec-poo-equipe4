@@ -10,6 +10,11 @@ import java.util.Scanner;
 
 public class MainRepository {
     private static Conexao conexao;
+    public static final String PATH = "/home/nicolas/";
+    public static final String SFILE = "DadosConexao.ini";
+    public static final String BD = "trabalhofinalpoo";
+    public static final String SCHEMA = "sistema";
+    public static final Conexao CONEXAO = iniciarConexaoComBanco();
 
     public static boolean createBD(String bd, String schema, DadosConexao dadosCon) {
         boolean bdCriado = false;
@@ -303,17 +308,15 @@ public class MainRepository {
         return dbExists;
     }
 
-    public static void CriarDatabase(String PATH, String SFILE, String BD, String SCHEMA) {
+    public static Conexao iniciarConexaoComBanco() {
         ArquivoTxt conexaoIni = new ArquivoTxt(PATH + SFILE);
         DadosConexao dadoCon = new DadosConexao();
         Scanner input = new Scanner(System.in);
-        boolean abrirSistema = false;
 
 
         if (conexaoIni.criarArquivo()) {
             if (conexaoIni.alimentaDadosConexao()) {
                 dadoCon = conexaoIni.getData();
-                abrirSistema = true;
             } else {
                 conexaoIni.apagarArquivo();
                 System.out.println("Arquivo de configuração de conexão:\n");
@@ -338,31 +341,36 @@ public class MainRepository {
 
                     if (conexaoIni.alimentaDadosConexao()) {
                         dadoCon = conexaoIni.getData();
-                        abrirSistema = true;
                     } else System.out.println("Não foi possível efetuar a configuração.\nVerifique");
                 }
             }
-        } else
+        } else {
             System.out.println("Houve um problema na criação do arquivo de configuração.");
+        }
 
-        if (abrirSistema) {
-            if (MainRepository.createBD(BD, SCHEMA, dadoCon)) {
-                Conexao con = new Conexao(dadoCon);
-                con.connect();
+        Conexao con = new Conexao(dadoCon);
+        con.connect();
+        return con;
+    }
 
+//        if (abrirSistema) {
+//            if (MainRepository.createBD(BD, SCHEMA, dadoCon)) {
+//                Conexao con = new Conexao(dadoCon);
+//                con.connect();
+//
 //                var categoriaRepository = new CategoriaRepository(con, SCHEMA); // Cria uma instancia do repositorio de categorias
 //                var categoria = new Categoria(); // Instancia uma nova categoria
 //                categoria.setDescricao("Parafusos, porcas e arruelas"); // Coloca a descrição da categoria
 //                categoriaRepository.incluirCategoria(categoria); // Inclui a categoria no banco de dados
 //
 //                var clienteRepository = new ClienteRepository(con, SCHEMA); // Cria uma instancia do repositorio de clientes
-//                var cliente = new Cliente(); // Instancia um novo cliente
-//                cliente.setNome("Nicolas Jandrovisk"); // Coloca o nome do cliente
-//                cliente.setCpf("17080013258"); // Coloca o CPF do cliente
-//                cliente.setDtNascimento(new Date(99, 1, 1)); // Coloca a data de nascimento do cliente
-//                cliente.setEndereco("Estrada Dr. Rogério de Moura Estevão, Bonsucesso, Teresópolis RJ"); // Coloca o endereço do cliente
-//                cliente.setTelefone("(21)973262421"); // Coloca o telefone do cliente
-//                clienteRepository.incluirCliente(cliente); // Inclui o cliente no banco de dados
+////                var cliente = new Cliente(); // Instancia um novo cliente
+////                cliente.setNome("Nicolas Jandrovisk"); // Coloca o nome do cliente
+////                cliente.setCpf("17080013258"); // Coloca o CPF do cliente
+////                cliente.setDtNascimento(new Date(99, 1, 1)); // Coloca a data de nascimento do cliente
+////                cliente.setEndereco("Estrada Dr. Rogério de Moura Estevão, Bonsucesso, Teresópolis RJ"); // Coloca o endereço do cliente
+////                cliente.setTelefone("(21)973262421"); // Coloca o telefone do cliente
+////                clienteRepository.incluirCliente(cliente); // Inclui o cliente no banco de dados
 //
 ////              clienteRepository.apagarClientePorId(idDoCliente); // Apaga um cliente do banco de dados
 //
@@ -372,10 +380,10 @@ public class MainRepository {
 //                for (Cliente clientero : clientola) {
 //                    clientero.imprimirDadosCliente(); // Imprime as informações do cliente
 //                } // fazendo um loop imprimindo cada cliente
-
-            } else {
-                System.err.println("Houve um problema na criação do banco de dados.");
-            }
-        }
-    }
+//
+//            } else {
+//                System.err.println("Houve um problema na criação do banco de dados.");
+//            }
+//        }
+//    }
 }
