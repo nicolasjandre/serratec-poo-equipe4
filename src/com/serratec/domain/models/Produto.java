@@ -8,6 +8,8 @@ public class Produto {
     private Double vlCusto;
     private Double vlVenda;
 
+    private double qtdVendida;
+
     public int getIdProduto() {
         return idProduto;
     }
@@ -46,5 +48,21 @@ public class Produto {
 
     public void setVlVenda(Double vlVenda) {
         this.vlVenda = vlVenda;
+    }
+
+    public double getQtdVendida() {
+        return qtdVendida;
+    }
+
+    public void setQtdVendida(double qtdVendida) {
+        this.qtdVendida = qtdVendida;
+    }
+
+    public Double getEstoque() {
+        return estoque;
+    }
+
+    public void setEstoque(Double estoque) {
+        this.estoque = estoque;
     }
 }

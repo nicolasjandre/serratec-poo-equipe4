@@ -40,6 +40,9 @@ public class PedidoRepository implements CRUDRepository <Pedido>{
             pInclusao.setInt(5, pedido.getCliente().getIdCliente());
 
             pInclusao.executeUpdate();
+
+
+
         } catch (Exception e) {
             if (e.getLocalizedMessage().contains("is null")) {
                 System.err.println("\nPedido não incluído.\nVerifique se foi chamado o connect:\n" + e);
@@ -203,6 +206,38 @@ public class PedidoRepository implements CRUDRepository <Pedido>{
         }
 
         return pedidos;
+    }
+
+    public Pedido buscarUltimoPedidoCriado() {
+
+        Pedido pedido = null;
+        String sql = "SELECT * FROM " + MainRepository.SCHEMA + ".pedido ORDER BY idpedido DESC LIMIT 1 ";
+        ResultSet tabela;
+
+        tabela = MainRepository.CONEXAO.query(sql);
+
+        try {
+            if (tabela.next()) {
+                pedido = new Pedido();
+
+                pedido.setIdPedido(tabela.getInt("idpedido"));
+                pedido.setDtEmissao(tabela.getDate("dtemissao"));
+                pedido.setDtEntrega(tabela.getDate("dtentrega"));
+                pedido.setValorTotal(tabela.getDouble("valortotal"));
+                pedido.setObervacao(tabela.getString("observacao"));
+
+                var clienteRepository = new ClienteRepository();
+                Cliente cliente = clienteRepository.buscarPorId(tabela.getInt("idcliente"));
+                pedido.setCliente(cliente);
+            }
+
+            tabela.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return pedido;
+
     }
 }
 
