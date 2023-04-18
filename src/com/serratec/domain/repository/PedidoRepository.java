@@ -1,4 +1,211 @@
 package com.serratec.domain.repository;
 
-public class PedidoRepository {
-}
+import com.serratec.domain.models.Cliente;
+import com.serratec.domain.models.Pedido;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+public class PedidoRepository implements CRUDRepository <Pedido>{
+
+    PreparedStatement pInclusao = null;
+    public PedidoRepository() {
+
+        prepararSqlInclusao();
+
+    }
+
+    @Override
+    public void prepararSqlInclusao() {
+        String sql = "insert into " + MainRepository.SCHEMA + ".pedido";
+        sql += " (dtemissao, dtentrega, valortotal, observacao, idcliente)";
+        sql += " values ";
+        sql += " (?, ?, ?, ?, ?)";
+
+        try {
+            pInclusao = MainRepository.CONEXAO.getC().prepareStatement(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void incluir(Pedido pedido) {
+        try {
+            pInclusao.setDate(1, pedido.getDtEmissao());
+            pInclusao.setDate(2, pedido.getDtEntrega());
+            pInclusao.setDouble(3, pedido.getValorTotal());
+            pInclusao.setString(4, pedido.getObervacao());
+            pInclusao.setInt(5, pedido.getCliente().getIdCliente());
+
+            pInclusao.executeUpdate();
+        } catch (Exception e) {
+            if (e.getLocalizedMessage().contains("is null")) {
+                System.err.println("\nPedido não incluído.\nVerifique se foi chamado o connect:\n" + e);
+            } else {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void alterar(Pedido pedido) {
+
+        String sql = "update " +
+                MainRepository.SCHEMA + ".pedido set " +
+                "dtemissao = '" + pedido.getDtEmissao() + "'" +
+                ", dtentrega = '" + pedido.getDtEntrega() + "'" +
+                ", valortotal = '" + pedido.getValorTotal() + "'" +
+                ", observacao = '" + pedido.getObervacao() + "' " +
+                ", idcliente = '" + pedido.getCliente().getIdCliente() + "' " +
+                "where idpedido = " + pedido.getIdPedido();
+        MainRepository.CONEXAO.query(sql);
+
+    }
+
+    @Override
+    public void apagarPorId(int idPedido) {
+
+        String sql = "delete from " + MainRepository.SCHEMA + ".pedido" +
+                " where idPedido = " + idPedido;
+
+        MainRepository.CONEXAO.query(sql);
+
+    }
+
+    @Override
+    public Pedido buscarPorId(int idPedido) {
+
+        var pedido = new Pedido();
+        ResultSet tabela;
+
+        String sql = "select * from " + MainRepository.SCHEMA + ".pedido where idpedido = " + idPedido;
+
+        tabela = MainRepository.CONEXAO.query(sql);
+
+        try {
+            if (tabela.next()) {
+                var clienteRepository = new ClienteRepository();
+                Cliente cliente = clienteRepository.buscarPorId(tabela.getInt("idcliente"));
+
+                pedido.setIdPedido(tabela.getInt("idpedido"));
+                pedido.setDtEmissao(tabela.getDate("dtemissao"));
+                pedido.setDtEntrega(tabela.getDate("dtentrega"));
+                pedido.setValorTotal(tabela.getDouble("valortotal"));
+                pedido.setObervacao(tabela.getString("observacao"));
+                pedido.setCliente(cliente);
+            } else
+                System.out.println("Pedido com o ID: [" + idPedido + "] não localizado.");
+
+            tabela.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return pedido;
+    }
+
+
+    public List<Pedido> buscarPorCliente(Cliente cliente) {
+        List<Pedido> pedidos = new ArrayList<>();
+        String sql;
+        ResultSet tabela;
+
+        sql = "SELECT * FROM " + MainRepository.SCHEMA + ".pedido WHERE idcliente = " + cliente.getIdCliente();
+
+        tabela = MainRepository.CONEXAO.query(sql);
+
+        try {
+            while (tabela.next()) {
+                var pedido = new Pedido();
+
+                pedido.setIdPedido(tabela.getInt("idpedido"));
+                pedido.setDtEmissao(tabela.getDate("dtemissao"));
+                pedido.setDtEntrega(tabela.getDate("dtentrega"));
+                pedido.setValorTotal(tabela.getDouble("valortotal"));
+                pedido.setObervacao(tabela.getString("observacao"));
+                pedido.setCliente(cliente);
+
+                pedidos.add(pedido);
+            }
+
+            tabela.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return pedidos;
+    }
+
+    @Override
+    public List<Pedido> buscarTodos() {
+
+        List<Pedido> pedidos = new ArrayList<>();
+        String sql = "select * from " + MainRepository.SCHEMA + ".pedido order by idpedido";
+        ResultSet tabela;
+
+        tabela = MainRepository.CONEXAO.query(sql);
+
+        try {
+            while (tabela.next()) {
+
+                var pedido = new Pedido();
+
+                pedido.setIdPedido(tabela.getInt("idpedido"));
+                pedido.setDtEmissao(tabela.getDate("dtemissao"));
+                pedido.setDtEntrega(tabela.getDate("dtentrega"));
+                pedido.setValorTotal(tabela.getDouble("valortotal"));
+                pedido.setObervacao(tabela.getString("observacao"));
+
+                pedidos.add(pedido);
+            }
+
+            tabela.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return pedidos;
+    }
+
+    public List<Pedido> buscarPorData(String data1, String data2) {
+
+        List<Pedido> pedidos = new ArrayList<>();
+        String sql;
+        ResultSet tabela;
+
+        sql = "SELECT * FROM " + MainRepository.SCHEMA + ".pedido WHERE pedido.dtemissao ";
+        sql += "BETWEEN '" + data1 + " 00:00:00' AND '" + data2 + " 23:59:59'";
+
+        tabela = MainRepository.CONEXAO.query(sql);
+
+        try {
+            while (tabela.next()) {
+                var pedido = new Pedido();
+                var clienteRepository = new ClienteRepository();
+                Cliente cliente = clienteRepository.buscarPorId(tabela.getInt("idcliente"));
+
+                pedido.setIdPedido(tabela.getInt("idpedido"));
+                pedido.setDtEmissao(tabela.getDate("dtemissao"));
+                pedido.setDtEntrega(tabela.getDate("dtentrega"));
+                pedido.setValorTotal(tabela.getDouble("valortotal"));
+                pedido.setObervacao(tabela.getString("observacao"));
+                pedido.setCliente(cliente);
+
+                pedidos.add(pedido);
+            }
+
+            tabela.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return pedidos;
+
+    }
+
+
+    }
+

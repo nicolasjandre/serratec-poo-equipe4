@@ -8,6 +8,5 @@ public interface CRUDRepository<T> {
     void alterar(T t);
     void apagarPorId(int id);
     T buscarPorId(int id);
-    List<T> buscarPorNome(String nome);
     List<T> buscarTodos();
 }
