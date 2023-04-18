@@ -2,7 +2,6 @@ package com.serratec.utils;
 
 import com.serratec.domain.models.Cliente;
 import com.serratec.domain.repository.ClienteRepository;
-import com.serratec.domain.repository.MainRepository;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -18,9 +17,7 @@ public class Util {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd 'de' MMMM 'de' yyyy", new Locale("pt", "BR"));
 
-        String formattedDate = localDate.format(formatter);
-
-        return formattedDate;
+        return localDate.format(formatter);
     }
     public static String formatCPF(String cpf) {
         StringBuilder sb = new StringBuilder(cpf);
@@ -44,8 +41,8 @@ public class Util {
     }
 
     public static void criarClientesIniciais() {
-        ClienteRepository clienteRepository = new ClienteRepository(MainRepository.CONEXAO, MainRepository.SCHEMA);
-        List<Cliente> clientes = clienteRepository.buscarTodosOsClientes();
+        ClienteRepository clienteRepository = new ClienteRepository();
+        List<Cliente> clientes = clienteRepository.buscarTodos();
         var cliente = new Cliente();
 
         if (clientes.size() == 0) {
@@ -54,36 +51,35 @@ public class Util {
             cliente.setDtNascimento(Date.valueOf("1976-03-05"));
             cliente.setEndereco("Estrada do Calembe, 234, Granja Florestal, Teresópolis RJ");
             cliente.setTelefone("(21)997654321");
-            clienteRepository.incluirCliente(cliente);
+            clienteRepository.incluir(cliente);
 
             cliente.setCpf("98765432102");
             cliente.setNome("Pedro Alves");
             cliente.setDtNascimento(Date.valueOf("1990-08-20"));
             cliente.setEndereco("Rua Nova Friburgo, 567, Olaria, Nova Friburgo RJ");
             cliente.setTelefone("(22)998765432");
-            clienteRepository.incluirCliente(cliente);
+            clienteRepository.incluir(cliente);
 
             cliente.setCpf("12345678903");
             cliente.setNome("Maria da Silva");
             cliente.setDtNascimento(Date.valueOf("1985-05-10"));
             cliente.setEndereco("Rua João da Cunha, 123, Várzea, Teresópolis RJ");
             cliente.setTelefone("(21)987654321");
-            clienteRepository.incluirCliente(cliente);
+            clienteRepository.incluir(cliente);
 
             cliente.setCpf("23456789004");
             cliente.setNome("João dos Santos");
             cliente.setDtNascimento(Date.valueOf("1998-09-20"));
             cliente.setEndereco("Rua Manuel José Lebrão, 789, Agriões, Teresópolis RJ");
             cliente.setTelefone("(21)987654321");
-            clienteRepository.incluirCliente(cliente);
+            clienteRepository.incluir(cliente);
 
             cliente.setCpf("45678912305");
             cliente.setNome("Carlos Pereira");
             cliente.setDtNascimento(Date.valueOf("1976-03-05"));
             cliente.setEndereco("Estrada dos Pássaros, 234, Granja Florestal, Teresópolis RJ");
             cliente.setTelefone("(21)997654321");
-            clienteRepository.incluirCliente(cliente);
-
+            clienteRepository.incluir(cliente);
         }
     }
 }
