@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClienteRepository {
-    private Conexao conexao;
-    private String schema;
+    private final Conexao conexao;
+    private final String schema;
     PreparedStatement pInclusao = null;
 
     public ClienteRepository(Conexao conexao, String schema) {
@@ -84,7 +84,6 @@ public class ClienteRepository {
 
             tabela.close();
         } catch (Exception e) {
-            System.err.println(e);
             e.printStackTrace();
         }
 

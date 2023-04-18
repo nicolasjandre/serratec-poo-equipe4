@@ -1,4 +1,4 @@
 package com.serratec.utils;
 
-public class Menu {
+public class Menu { //fixing
 }
