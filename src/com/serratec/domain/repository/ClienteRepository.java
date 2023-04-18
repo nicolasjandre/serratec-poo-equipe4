@@ -1,38 +1,33 @@
 package com.serratec.domain.repository;
 
 import com.serratec.domain.models.Cliente;
-import com.serratec.domain.settings.Conexao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClienteRepository {
-    private final Conexao conexao;
-    private final String schema;
+public class ClienteRepository implements CRUDRepository<Cliente> {
     PreparedStatement pInclusao = null;
 
-    public ClienteRepository(Conexao conexao, String schema) {
-        this.conexao = conexao;
-        this.schema = schema;
+    public ClienteRepository() {
         prepararSqlInclusao();
     }
 
-    private void prepararSqlInclusao() {
-        String sql = "insert into " + this.schema + ".cliente";
+    public void prepararSqlInclusao() {
+        String sql = "insert into " + MainRepository.SCHEMA + ".cliente";
         sql += " (nome, cpf, dtnascimento, endereco, telefone)";
         sql += " values ";
         sql += " (?, ?, ?, ?, ?)";
 
         try {
-            pInclusao = conexao.getC().prepareStatement(sql);
+            pInclusao = MainRepository.CONEXAO.getC().prepareStatement(sql);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public int incluirCliente(Cliente cliente) {
+    public void incluir(Cliente cliente) {
         try {
             pInclusao.setString(1, cliente.getNome());
             pInclusao.setString(2, cliente.getCpf());
@@ -40,36 +35,35 @@ public class ClienteRepository {
             pInclusao.setString(4, cliente.getEndereco());
             pInclusao.setString(5, cliente.getTelefone());
 
-            return pInclusao.executeUpdate();
+            pInclusao.executeUpdate();
         } catch (Exception e) {
             if (e.getLocalizedMessage().contains("is null")) {
                 System.err.println("\nCliente não incluído.\nVerifique se foi chamado o connect:\n" + e);
             } else {
                 e.printStackTrace();
             }
-            return 0;
         }
     }
 
-    public void alterarCliente(Cliente cliente) {
+    public void alterar(Cliente cliente) {
         String sql = "update " +
-                this.schema + ".cliente set " +
+                MainRepository.SCHEMA + ".cliente set " +
                 "nome = '" + cliente.getNome() + "'" +
                 ", cpf = '" + cliente.getCpf() + "'" +
                 ", dtnascimento = '" + cliente.getDtNascimento() + "'" +
                 ", endereco = '" + cliente.getEndereco() + "' " +
                 ", telefone = '" + cliente.getTelefone() + "' " +
                 "where idcliente = " + cliente.getIdCliente();
-        conexao.query(sql);
+        MainRepository.CONEXAO.query(sql);
     }
 
-    public Cliente buscarClientePorId(int idCliente) {
+    public Cliente buscarPorId(int idCliente) {
         Cliente cliente = new Cliente();
         ResultSet tabela;
 
-        String sql = "select * from " + this.schema + ".cliente where idcliente = " + idCliente;
+        String sql = "select * from " + MainRepository.SCHEMA + ".cliente where idcliente = " + idCliente;
 
-        tabela = conexao.query(sql);
+        tabela = MainRepository.CONEXAO.query(sql);
 
         try {
             if (tabela.next()) {
@@ -90,21 +84,21 @@ public class ClienteRepository {
         return cliente;
     }
 
-    public void apagarClientePorId(int idCliente) {
-        String sql = "delete from " + this.schema + ".cliente" +
+    public void apagarPorId(int idCliente) {
+        String sql = "delete from " + MainRepository.SCHEMA + ".cliente" +
                 " where idcliente = " + idCliente;
 
-        conexao.query(sql);
+        MainRepository.CONEXAO.query(sql);
     }
 
-    public List<Cliente> buscarClientesPeloNome(String nome) {
+    public List<Cliente> buscarPorNome(String nome) {
         List<Cliente> clientes = new ArrayList<>();
         String sql;
         ResultSet tabela;
 
-        sql = "SELECT * FROM " + this.schema + ".cliente WHERE LOWER(nome) ILIKE '%" + nome.toLowerCase() + "%'";
+        sql = "SELECT * FROM " + MainRepository.SCHEMA + ".cliente WHERE LOWER(nome) ILIKE '%" + nome.toLowerCase() + "%'";
 
-        tabela = conexao.query(sql);
+        tabela = MainRepository.CONEXAO.query(sql);
 
         try {
             while (tabela.next()) {
@@ -127,12 +121,12 @@ public class ClienteRepository {
         return clientes;
     }
 
-    public List<Cliente> buscarTodosOsClientes() {
+    public List<Cliente> buscarTodos() {
         List<Cliente> clientes = new ArrayList<>();
-        String sql = "select * from " + this.schema + ".cliente order by idcliente";
+        String sql = "select * from " + MainRepository.SCHEMA + ".cliente order by idcliente";
         ResultSet tabela;
 
-        tabela = conexao.query(sql);
+        tabela = MainRepository.CONEXAO.query(sql);
 
         try {
             while (tabela.next()) {
