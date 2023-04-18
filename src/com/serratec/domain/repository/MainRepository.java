@@ -3,39 +3,34 @@ package com.serratec.domain.repository;
 import com.serratec.domain.files.ArquivoTxt;
 import com.serratec.domain.settings.Conexao;
 import com.serratec.domain.settings.DadosConexao;
+import com.serratec.utils.Util;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 
 public class MainRepository {
-    private static Conexao conexao;
-    public static final String PATH = "/home/nicolas/";
-    public static final String SFILE = "DadosConexao.ini";
-    public static final String BD = "trabalhofinalpoo";
+    private static final String PATH = "/home/nicolas/";
+    private static final String SFILE = "DadosConexao.ini";
+    private static final String BD = "equipe4-trabalhofinalpoo";
     public static final String SCHEMA = "sistema";
-    public static final Conexao CONEXAO = iniciarConexaoComBanco();
+    public static Conexao CONEXAO;
 
-    public static boolean createBD(String bd, String schema, DadosConexao dadosCon) {
+    private static boolean createBD(String bd, String schema, DadosConexao dadosCon) {
         boolean bdCriado = false;
-        conexao = conectar("postgres", dadosCon);
 
-        if (criarDatabase(conexao, bd)) {
-            desconectar(conexao);
+        if (criarDatabase(CONEXAO, bd)) {
 
-            conexao = conectar(bd, dadosCon);
-
-            if (criarSchema(conexao, schema)) {
-                criarEntidadeCliente(conexao, schema);
-                criarEntidadeCategoria(conexao, schema);
-                criarEntidadeProduto(conexao, schema);
-                criarEntidadePedido(conexao, schema);
-                criarEntidadePeditem(conexao, schema);
+            if (criarSchema(CONEXAO, schema)) {
+                criarEntidadeCliente(CONEXAO, schema);
+                criarEntidadeCategoria(CONEXAO, schema);
+                criarEntidadeProduto(CONEXAO, schema);
+                criarEntidadePedido(CONEXAO, schema);
+                criarEntidadePeditem(CONEXAO, schema);
 
                 bdCriado = true;
             }
         }
-        desconectar(conexao);
 
         return bdCriado;
     }
@@ -45,10 +40,6 @@ public class MainRepository {
         Conexao conexao = new Conexao(dadosCon);
         conexao.connect();
         return conexao;
-    }
-
-    private static void desconectar(Conexao con) {
-        con.disconnect();
     }
 
     private static boolean criarDatabase(Conexao con, String bd) {
@@ -143,7 +134,7 @@ public class MainRepository {
         }
     }
 
-    public static boolean atributoExists(Conexao con, String schema,
+    private static boolean atributoExists(Conexao con, String schema,
                                          String entidade, String atributo) {
 
         boolean atributoExist = false;
@@ -156,7 +147,7 @@ public class MainRepository {
         ResultSet result = con.query(sql);
 
         try {
-            atributoExist = (result.next()?true:false);
+            atributoExist = (result.next());
 
         } catch (SQLException e) {
             System.err.println(e);
@@ -166,7 +157,7 @@ public class MainRepository {
         return atributoExist;
     }
 
-    public static boolean entidadeExists(Conexao con, String schema, String entidade) {
+    private static boolean entidadeExists(Conexao con, String schema, String entidade) {
         boolean entidadeExist = false;
         String sql =
                 "SELECT n.nspname AS schemaname, c.relname AS tablename " +
@@ -177,13 +168,13 @@ public class MainRepository {
                         "AND n.nspname = '" + schema + "' " +
                         "AND c.relname = '" + entidade + "'";
 
-        ResultSet tabela = con.query(sql);
 
         try {
-            entidadeExist = (tabela.next()?true:false);
+            ResultSet tabela = con.query(sql);
+
+            entidadeExist = (tabela.next());
 
         } catch (SQLException e) {
-            System.out.println(e);
             e.printStackTrace();
         }
 
@@ -292,23 +283,7 @@ public class MainRepository {
         }
     }
 
-    public static boolean databaseExists(Conexao con, String bd) {
-        ResultSet entidade;
-        boolean dbExists = false;
-
-        String sql = "select datname from pg_database where datname = '" + bd + "'";
-        entidade = con.query(sql);
-
-        try {
-            dbExists = entidade.next();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return dbExists;
-    }
-
-    public static Conexao iniciarConexaoComBanco() {
+    public static void iniciarConexaoComBanco() {
         ArquivoTxt conexaoIni = new ArquivoTxt(PATH + SFILE);
         DadosConexao dadoCon = new DadosConexao();
         boolean abrirSistema = false;
@@ -351,17 +326,13 @@ public class MainRepository {
             System.out.println("Houve um problema na criação do arquivo de configuração.");
         }
 
-        Conexao con = new Conexao(dadoCon);
-
         if (abrirSistema) {
+            CONEXAO = conectar(BD, dadoCon);
             if (MainRepository.createBD(BD, SCHEMA, dadoCon)) {
-
+                Util.imprimirSistemaIniciado();
             } else {
                 System.err.println("Houve um problema na criação do banco de dados.");
             }
         }
-
-        con.connect();
-        return con;
     }
 }

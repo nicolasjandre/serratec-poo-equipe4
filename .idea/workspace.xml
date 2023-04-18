@@ -4,9 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2fe9a193-2876-4f4b-adb1-8ab32c13e4c5" name="Changes" comment=":rocket: connection is now automatic">
+    <list default="true" id="2fe9a193-2876-4f4b-adb1-8ab32c13e4c5" name="Changes" comment=":rocket: database is now being created correctly">
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/serratec/utils/Menu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Equipe6-TrabalhoFinalPOO/com/serratec/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Equipe6-TrabalhoFinalPOO/com/serratec/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Equipe6-TrabalhoFinalPOO/com/serratec/domain/repository/ClienteRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Equipe6-TrabalhoFinalPOO/com/serratec/domain/repository/ClienteRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Equipe6-TrabalhoFinalPOO/com/serratec/domain/repository/MainRepository$1Database.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Equipe6-TrabalhoFinalPOO/com/serratec/domain/repository/MainRepository$1Database.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Equipe6-TrabalhoFinalPOO/com/serratec/domain/repository/MainRepository$1Schema.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Equipe6-TrabalhoFinalPOO/com/serratec/domain/repository/MainRepository$1Schema.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Equipe6-TrabalhoFinalPOO/com/serratec/domain/repository/MainRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Equipe6-TrabalhoFinalPOO/com/serratec/domain/repository/MainRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/serratec/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/serratec/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/serratec/domain/repository/ClienteRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/serratec/domain/repository/ClienteRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/serratec/domain/repository/MainRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/serratec/domain/repository/MainRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/serratec/domain/services/ClienteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/serratec/domain/services/ClienteService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/serratec/utils/Util.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/serratec/utils/Util.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,6 +33,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="8d59250ed95be4084d794500d2277cf324440bec" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory"><![CDATA[{
@@ -37,6 +53,9 @@
       </UrlAndAccount>
     </option>
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/src/com/serratec/domain/repository/MainRepository.java" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="ProjectId" id="2OVcgtTey4nFPgWxXOJW40JDzZL" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -51,7 +70,7 @@
     "project.structure.last.edited": "Libraries",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+    "settings.editor.selected.configurable": "reference.projectsettings.compiler.javacompiler"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -116,7 +135,14 @@
       <option name="project" value="LOCAL" />
       <updated>1681757217528</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary=":rocket: database is now being created correctly">
+      <created>1681760105241</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1681760105241</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -124,7 +150,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="master" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -134,7 +172,8 @@
     <MESSAGE value="first commit" />
     <MESSAGE value=":rocket: eclipse included" />
     <MESSAGE value=":rocket: connection is now automatic" />
-    <option name="LAST_COMMIT_MESSAGE" value=":rocket: connection is now automatic" />
+    <MESSAGE value=":rocket: database is now being created correctly" />
+    <option name="LAST_COMMIT_MESSAGE" value=":rocket: database is now being created correctly" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
