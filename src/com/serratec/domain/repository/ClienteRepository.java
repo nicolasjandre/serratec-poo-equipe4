@@ -4,6 +4,7 @@ import com.serratec.domain.models.Cliente;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,7 @@ public class ClienteRepository implements CRUDRepository<Cliente> {
         prepararSqlInclusao();
     }
 
+    @Override
     public void prepararSqlInclusao() {
         String sql = "insert into " + MainRepository.SCHEMA + ".cliente";
         sql += " (nome, cpf, dtnascimento, endereco, telefone)";
@@ -27,6 +29,7 @@ public class ClienteRepository implements CRUDRepository<Cliente> {
         }
     }
 
+    @Override
     public void incluir(Cliente cliente) {
         try {
             pInclusao.setString(1, cliente.getNome());
@@ -45,6 +48,7 @@ public class ClienteRepository implements CRUDRepository<Cliente> {
         }
     }
 
+    @Override
     public void alterar(Cliente cliente) {
         String sql = "update " +
                 MainRepository.SCHEMA + ".cliente set " +
@@ -54,11 +58,12 @@ public class ClienteRepository implements CRUDRepository<Cliente> {
                 ", endereco = '" + cliente.getEndereco() + "' " +
                 ", telefone = '" + cliente.getTelefone() + "' " +
                 "where idcliente = " + cliente.getIdCliente();
-        MainRepository.CONEXAO.query(sql);
+        MainRepository.CONEXAO.updateQuery(sql);
     }
 
+    @Override
     public Cliente buscarPorId(int idCliente) {
-        Cliente cliente = new Cliente();
+        var cliente = new Cliente();
         ResultSet tabela;
 
         String sql = "select * from " + MainRepository.SCHEMA + ".cliente where idcliente = " + idCliente;
@@ -84,11 +89,12 @@ public class ClienteRepository implements CRUDRepository<Cliente> {
         return cliente;
     }
 
+    @Override
     public void apagarPorId(int idCliente) {
         String sql = "delete from " + MainRepository.SCHEMA + ".cliente" +
                 " where idcliente = " + idCliente;
 
-        MainRepository.CONEXAO.query(sql);
+        MainRepository.CONEXAO.updateQuery(sql);
     }
 
     public List<Cliente> buscarPorNome(String nome) {
@@ -102,7 +108,7 @@ public class ClienteRepository implements CRUDRepository<Cliente> {
 
         try {
             while (tabela.next()) {
-                Cliente cliente = new Cliente();
+                var cliente = new Cliente();
                 cliente.setIdCliente(tabela.getInt("idcliente"));
                 cliente.setNome(tabela.getString("nome"));
                 cliente.setCpf(tabela.getString("cpf"));
@@ -112,15 +118,20 @@ public class ClienteRepository implements CRUDRepository<Cliente> {
 
                 clientes.add(cliente);
             }
-
-            tabela.close();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                tabela.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
         return clientes;
     }
 
+    @Override
     public List<Cliente> buscarTodos() {
         List<Cliente> clientes = new ArrayList<>();
         String sql = "select * from " + MainRepository.SCHEMA + ".cliente order by idcliente";
@@ -130,7 +141,7 @@ public class ClienteRepository implements CRUDRepository<Cliente> {
 
         try {
             while (tabela.next()) {
-                Cliente cliente = new Cliente();
+                var cliente = new Cliente();
                 cliente.setIdCliente(tabela.getInt("idcliente"));
                 cliente.setNome(tabela.getString("nome"));
                 cliente.setCpf(tabela.getString("cpf"));
@@ -140,10 +151,14 @@ public class ClienteRepository implements CRUDRepository<Cliente> {
 
                 clientes.add(cliente);
             }
-
-            tabela.close();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                tabela.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
         return clientes;
