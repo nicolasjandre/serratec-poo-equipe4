@@ -1,12 +1,13 @@
 package com.serratec.domain.models;
 
-import java.time.LocalDate;
+import java.sql.Date;
 import java.util.List;
 
 public class Pedido {
     private int idPedido;
-    private LocalDate dtEmissao;
-    private LocalDate dtEntrega;
+
+    private Date dtEmissao;
+    private Date dtEntrega;
     private Double valorTotal;
     private String obervacao;
     private Cliente cliente;
@@ -19,19 +20,19 @@ public class Pedido {
         this.idPedido = idPedido;
     }
 
-    public LocalDate getDtEmissao() {
+    public Date getDtEmissao() {
         return dtEmissao;
     }
 
-    public void setDtEmissao(LocalDate dtEmissao) {
+    public void setDtEmissao(Date dtEmissao) {
         this.dtEmissao = dtEmissao;
     }
 
-    public LocalDate getDtEntrega() {
+    public Date getDtEntrega() {
         return dtEntrega;
     }
 
-    public void setDtEntrega(LocalDate dtEntrega) {
+    public void setDtEntrega(Date dtEntrega) {
         this.dtEntrega = dtEntrega;
     }
 
