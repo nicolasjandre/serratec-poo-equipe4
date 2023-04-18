@@ -38,7 +38,6 @@ public class Conexao {
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE));
         }catch (Exception e) {
-            System.err.println(e);
             e.printStackTrace();
         }
     }
@@ -47,7 +46,6 @@ public class Conexao {
         try {
             getC().close();
         }catch (SQLException ex) {
-            System.err.println(ex);
             ex.printStackTrace();
         }
     }
@@ -62,6 +60,14 @@ public class Conexao {
                 System.err.println("Verifique se foi chamado o connect");
             }
             return null;
+        }
+    }
+
+    public void updateQuery(String query){
+        try {
+            getStatment().executeUpdate(query);
+        }catch (NullPointerException | SQLException ex) {
+                ex.printStackTrace();
         }
     }
 

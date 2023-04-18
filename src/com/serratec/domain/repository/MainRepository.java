@@ -66,7 +66,7 @@ public class MainRepository {
 
                 if (!bdExiste) {
                     sql = "create database "+ BD;
-                    con.query(sql);
+                    con.updateQuery(sql);
                     tentativas++;
                 }
             } catch (Exception e) {
@@ -99,7 +99,7 @@ public class MainRepository {
 
                 if (!schemaExiste) {
                     sql = "create schema "+ SCHEMA;
-                    con.query(sql);
+                    con.updateQuery(sql);
                     tentativas++;
                 }
             } catch (Exception e) {
@@ -114,7 +114,7 @@ public class MainRepository {
 
     private static void criarTabela(Conexao con, String entidade) {
         String sql = "create table " + SCHEMA + "." + entidade + " ()";
-        con.query(sql);
+        con.updateQuery(sql);
     }
 
     private static void criarCampo(Conexao con, String entidade,
@@ -134,7 +134,7 @@ public class MainRepository {
                 sql += "references " + entidadeEstrangeira + "(" + atributoEstrangeiro + ")";
             }
 
-            con.query(sql);
+            con.updateQuery(sql);
         }
     }
 
