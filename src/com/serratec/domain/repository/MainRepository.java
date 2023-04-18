@@ -12,21 +12,25 @@ import java.util.Scanner;
 public class MainRepository {
     private static final String PATH = "/home/nicolas/";
     private static final String SFILE = "DadosConexao.ini";
-    private static final String BD = "equipe4-trabalhofinalpoo";
+    private static final String BD = "equipe4trabalhofinalpoo";
     public static final String SCHEMA = "sistema";
     public static Conexao CONEXAO;
 
-    private static boolean createBD(String bd, String schema, DadosConexao dadosCon) {
+    private static boolean createBD(DadosConexao dadosCon) {
         boolean bdCriado = false;
+        Conexao conexao = conectar("postgres", dadosCon);
 
-        if (criarDatabase(CONEXAO, bd)) {
+        if (criarDatabase(conexao)) {
+            conexao.disconnect();
 
-            if (criarSchema(CONEXAO, schema)) {
-                criarEntidadeCliente(CONEXAO, schema);
-                criarEntidadeCategoria(CONEXAO, schema);
-                criarEntidadeProduto(CONEXAO, schema);
-                criarEntidadePedido(CONEXAO, schema);
-                criarEntidadePeditem(CONEXAO, schema);
+            CONEXAO = conectar(BD, dadosCon);
+
+            if (criarSchema(CONEXAO)) {
+                criarEntidadeCliente(CONEXAO);
+                criarEntidadeCategoria(CONEXAO);
+                criarEntidadeProduto(CONEXAO);
+                criarEntidadePedido(CONEXAO);
+                criarEntidadePeditem(CONEXAO);
 
                 bdCriado = true;
             }
@@ -42,15 +46,15 @@ public class MainRepository {
         return conexao;
     }
 
-    private static boolean criarDatabase(Conexao con, String bd) {
+    private static boolean criarDatabase(Conexao con) {
         boolean bdExiste;
         int tentativas = 1;
         String sql;
 
         class Database {
-            public static ResultSet Exists(Conexao con, String bd) {
+            public static ResultSet Exists(Conexao con) {
                 ResultSet entidade;
-                String sql = "select datname from pg_database where datname = '" + bd + "'";
+                String sql = "select datname from pg_database where datname = '" + BD + "'";
                 entidade = con.query(sql);
                 return entidade;
             }
@@ -58,15 +62,15 @@ public class MainRepository {
 
         do {
             try {
-                bdExiste = Database.Exists(con, bd).next();
+                bdExiste = Database.Exists(con).next();
 
                 if (!bdExiste) {
-                    sql = "create database "+ bd;
+                    sql = "create database "+ BD;
                     con.query(sql);
                     tentativas++;
                 }
             } catch (Exception e) {
-                System.err.printf("Não foi possível criar o database %s: %s", bd, e);
+                System.err.printf("Não foi possível criar o database %s: %s", BD, e);
                 e.printStackTrace();
                 return false;
             }
@@ -75,15 +79,15 @@ public class MainRepository {
         return bdExiste;
     }
 
-    private static boolean criarSchema(Conexao con, String schema) {
+    private static boolean criarSchema(Conexao con) {
         boolean schemaExiste;
         int tentativas = 1;
         String sql;
 
         class Schema {
-            public static ResultSet Exists(Conexao con, String schema) {
+            public static ResultSet Exists(Conexao con) {
                 ResultSet entidade;
-                String sql = "select * from pg_namespace where nspname = '" + schema + "'";
+                String sql = "select * from pg_namespace where nspname = '" + SCHEMA + "'";
                 entidade = con.query(sql);
                 return entidade;
             }
@@ -91,15 +95,15 @@ public class MainRepository {
 
         do {
             try {
-                schemaExiste = Schema.Exists(con, schema).next();
+                schemaExiste = Schema.Exists(con).next();
 
                 if (!schemaExiste) {
-                    sql = "create schema "+ schema;
+                    sql = "create schema "+ SCHEMA;
                     con.query(sql);
                     tentativas++;
                 }
             } catch (Exception e) {
-                System.err.printf("Não foi possível criar o schema %s: %s", schema, e);
+                System.err.printf("Não foi possível criar o schema %s: %s", SCHEMA, e);
                 e.printStackTrace();
                 return false;
             }
@@ -108,18 +112,18 @@ public class MainRepository {
         return schemaExiste;
     }
 
-    private static void criarTabela(Conexao con, String entidade, String schema) {
-        String sql = "create table " + schema + "." + entidade + " ()";
+    private static void criarTabela(Conexao con, String entidade) {
+        String sql = "create table " + SCHEMA + "." + entidade + " ()";
         con.query(sql);
     }
 
-    private static void criarCampo(Conexao con, String schema, String entidade,
+    private static void criarCampo(Conexao con, String entidade,
                                    String atributo, String tipoAtributo, boolean primario,
                                    boolean estrangeiro, String entidadeEstrangeira,
                                    String atributoEstrangeiro) {
 
-        if (!atributoExists(con, schema, entidade, atributo)) {
-            String sql = "alter table " + schema + "." + entidade + " add column " +
+        if (!atributoExists(con, entidade, atributo)) {
+            String sql = "alter table " + SCHEMA + "." + entidade + " add column " +
                     atributo + " " + tipoAtributo + " ";
 
             if (primario) {
@@ -134,13 +138,13 @@ public class MainRepository {
         }
     }
 
-    private static boolean atributoExists(Conexao con, String schema,
+    private static boolean atributoExists(Conexao con,
                                          String entidade, String atributo) {
 
         boolean atributoExist = false;
 
         String sql = "select table_schema, table_name, column_name from information_schema.columns "
-                + "where table_schema = '" + schema + "' "
+                + "where table_schema = '" + SCHEMA + "' "
                 + "and table_name = '" + entidade + "' "
                 + "and column_name = '" + atributo + "'";
 
@@ -150,14 +154,13 @@ public class MainRepository {
             atributoExist = (result.next());
 
         } catch (SQLException e) {
-            System.err.println(e);
             e.printStackTrace();
         }
 
         return atributoExist;
     }
 
-    private static boolean entidadeExists(Conexao con, String schema, String entidade) {
+    private static boolean entidadeExists(Conexao con, String entidade) {
         boolean entidadeExist = false;
         String sql =
                 "SELECT n.nspname AS schemaname, c.relname AS tablename " +
@@ -165,7 +168,7 @@ public class MainRepository {
                         "LEFT JOIN pg_namespace n ON n.oid = c.relnamespace " +
                         "LEFT JOIN pg_tablespace t ON t.oid = c.reltablespace " +
                         "WHERE c.relkind = 'r' " +
-                        "AND n.nspname = '" + schema + "' " +
+                        "AND n.nspname = '" + SCHEMA + "' " +
                         "AND c.relname = '" + entidade + "'";
 
 
@@ -181,104 +184,102 @@ public class MainRepository {
         return entidadeExist;
     }
 
-    private static void criarEntidadeCliente(Conexao con, String schema) {
+    private static void criarEntidadeCliente(Conexao con) {
         String entidade = "cliente";
 
-        if (!entidadeExists(con, schema, entidade))
-            criarTabela(con, entidade, schema);
+        if (!entidadeExists(con, entidade))
+            criarTabela(con, entidade);
 
-        if (entidadeExists(con, schema, entidade)) {
-            criarCampo(con, schema, entidade, "idcliente", "serial",
+        if (entidadeExists(con, entidade)) {
+            criarCampo(con, entidade, "idcliente", "serial",
                     true,  false, null, null);
-            criarCampo(con, schema, entidade, "nome", "varchar(100)",
+            criarCampo(con, entidade, "nome", "varchar(100)",
                     false, false, null, null);
-            criarCampo(con, schema, entidade, "cpf", "varchar(11)" ,
+            criarCampo(con, entidade, "cpf", "varchar(11)" ,
                     false, false, null, null);
-            criarCampo(con, schema, entidade, "dtnascimento", "timestamp" ,
+            criarCampo(con, entidade, "dtnascimento", "timestamp" ,
                     false, false, null, null);
-            criarCampo(con, schema, entidade, "endereco" , "varchar(150)",
+            criarCampo(con, entidade, "endereco" , "varchar(150)",
                     false, false, null, null);
-            criarCampo(con, schema, entidade, "telefone", "varchar(20)",
+            criarCampo(con, entidade, "telefone", "varchar(20)",
                     false, false, null, null);
         }
     }
 
-    private static void criarEntidadePedido(Conexao con, String schema) {
+    private static void criarEntidadePedido(Conexao con) {
         String entidade = "pedido";
 
-        if (!entidadeExists(con, schema, entidade))
-            criarTabela(con, entidade, schema);
+        if (!entidadeExists(con, entidade))
+            criarTabela(con, entidade);
 
-        if (entidadeExists(con, schema, entidade)) {
-            criarCampo(con, schema, entidade, "idpedido", "serial", true,  false,
+        if (entidadeExists(con, entidade)) {
+            criarCampo(con, entidade, "idpedido", "serial", true,  false,
                     null, null);
-            criarCampo(con, schema, entidade, "dtemissao", "timestamp", false, false,
+            criarCampo(con, entidade, "dtemissao", "timestamp", false, false,
                     null, null);
-            criarCampo(con, schema, entidade, "dtentrega", "timestamp", false, false,
+            criarCampo(con, entidade, "dtentrega", "timestamp", false, false,
                     null, null);
-            criarCampo(con, schema, entidade, "valortotal", "double precision" , false, false,
+            criarCampo(con, entidade, "valortotal", "double precision" , false, false,
                     null, null);
-            criarCampo(con, schema, entidade, "observacao", "varchar(256)" , false, false,
+            criarCampo(con, entidade, "observacao", "varchar(256)" , false, false,
                     null, null);
-            criarCampo(con, schema, entidade, "idcliente", "integer" , false, true,
-                    schema+".cliente", "idcliente");
+            criarCampo(con, entidade, "idcliente", "integer" , false, true, SCHEMA+".cliente", "idcliente");
         }
     }
 
-    private static void criarEntidadeCategoria(Conexao con, String schema) {
+    private static void criarEntidadeCategoria(Conexao con) {
         String entidade = "categoria";
 
-        if (!entidadeExists(con, schema, entidade))
-            criarTabela(con, entidade, schema);
+        if (!entidadeExists(con, entidade))
+            criarTabela(con, entidade);
 
-        if (entidadeExists(con, schema, entidade)) {
-            criarCampo(con, schema, entidade, "idcategoria", "serial",true,  false,
+        if (entidadeExists(con, entidade)) {
+            criarCampo(con, entidade, "idcategoria", "serial",true,  false,
                     null, null);
-            criarCampo(con, schema, entidade, "descricao", "varchar(100)", false, false,
+            criarCampo(con, entidade, "descricao", "varchar(100)", false, false,
                     null, null);
         }
     }
 
-    private static void criarEntidadeProduto(Conexao con, String schema) {
+    private static void criarEntidadeProduto(Conexao con) {
         String entidade = "produto";
 
-        if (!entidadeExists(con, schema, entidade))
-            criarTabela(con, entidade, schema);
+        if (!entidadeExists(con, entidade))
+            criarTabela(con, entidade);
 
-        if (entidadeExists(con, schema, entidade)) {
-            criarCampo(con, schema, entidade, "idproduto", "serial", true,  false,
+        if (entidadeExists(con, entidade)) {
+            criarCampo(con, entidade, "idproduto", "serial", true,  false,
                     null, null);
-            criarCampo(con, schema, entidade, "descricao", "varchar(100)", false, false,
+            criarCampo(con, entidade, "descricao", "varchar(100)", false, false,
                     null, null);
-            criarCampo(con, schema, entidade, "idcategoria", "integer" , false, true,
-                    schema+".categoria", "idcategoria");
-            criarCampo(con, schema, entidade, "estoque", "double precision", false, false,
+            criarCampo(con, entidade, "idcategoria", "integer" , false, true, SCHEMA+".categoria", "idcategoria");
+            criarCampo(con, entidade, "estoque", "double precision", false, false,
                     null, null);
-            criarCampo(con, schema, entidade, "vlcusto", "double precision", false, false,
+            criarCampo(con, entidade, "vlcusto", "double precision", false, false,
                     null, null);
-            criarCampo(con, schema, entidade, "vlvenda", "double precision" , false, false,
+            criarCampo(con, entidade, "vlvenda", "double precision" , false, false,
                     null, null);
         }
     }
 
-    private static void criarEntidadePeditem(Conexao con, String schema) {
+    private static void criarEntidadePeditem(Conexao con) {
         String entidade = "peditem";
 
-        if (!entidadeExists(con, schema, entidade))
-            criarTabela(con, entidade, schema);
+        if (!entidadeExists(con, entidade))
+            criarTabela(con, entidade);
 
-        if (entidadeExists(con, schema, entidade)) {
-            criarCampo(con, schema, entidade, "idpeditem", "serial", true,  false,
+        if (entidadeExists(con, entidade)) {
+            criarCampo(con, entidade, "idpeditem", "serial", true,  false,
                     null, null);
-            criarCampo(con, schema, entidade, "idpedido", "integer", false, true,
-                    schema+".pedido", "idpedido");
-            criarCampo(con, schema, entidade, "idproduto", "integer", false, true,
-                    schema+".produto", "idproduto");
-            criarCampo(con, schema, entidade, "vlunitario", "double precision" , false,
+            criarCampo(con, entidade, "idpedido", "integer", false, true,
+                    SCHEMA+".pedido", "idpedido");
+            criarCampo(con, entidade, "idproduto", "integer", false, true,
+                    SCHEMA+".produto", "idproduto");
+            criarCampo(con, entidade, "vlunitario", "double precision" , false,
                     false, null, null);
-            criarCampo(con, schema, entidade, "vldesconto", "double precision" , false,
+            criarCampo(con, entidade, "vldesconto", "double precision" , false,
                     false, null, null);
-            criarCampo(con, schema, entidade, "quantidade", "double precision" , false,
+            criarCampo(con, entidade, "quantidade", "double precision" , false,
                     false, null, null);
         }
     }
@@ -327,8 +328,7 @@ public class MainRepository {
         }
 
         if (abrirSistema) {
-            CONEXAO = conectar(BD, dadoCon);
-            if (MainRepository.createBD(BD, SCHEMA, dadoCon)) {
+            if (MainRepository.createBD(dadoCon)) {
                 Util.imprimirSistemaIniciado();
             } else {
                 System.err.println("Houve um problema na criação do banco de dados.");
