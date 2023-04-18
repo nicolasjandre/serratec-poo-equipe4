@@ -311,12 +311,14 @@ public class MainRepository {
     public static Conexao iniciarConexaoComBanco() {
         ArquivoTxt conexaoIni = new ArquivoTxt(PATH + SFILE);
         DadosConexao dadoCon = new DadosConexao();
+        boolean abrirSistema = false;
         Scanner input = new Scanner(System.in);
 
 
         if (conexaoIni.criarArquivo()) {
             if (conexaoIni.alimentaDadosConexao()) {
                 dadoCon = conexaoIni.getData();
+                abrirSistema = true;
             } else {
                 conexaoIni.apagarArquivo();
                 System.out.println("Arquivo de configuração de conexão:\n");
@@ -341,6 +343,7 @@ public class MainRepository {
 
                     if (conexaoIni.alimentaDadosConexao()) {
                         dadoCon = conexaoIni.getData();
+                        abrirSistema = true;
                     } else System.out.println("Não foi possível efetuar a configuração.\nVerifique");
                 }
             }
@@ -349,41 +352,16 @@ public class MainRepository {
         }
 
         Conexao con = new Conexao(dadoCon);
+
+        if (abrirSistema) {
+            if (MainRepository.createBD(BD, SCHEMA, dadoCon)) {
+
+            } else {
+                System.err.println("Houve um problema na criação do banco de dados.");
+            }
+        }
+
         con.connect();
         return con;
     }
-
-//        if (abrirSistema) {
-//            if (MainRepository.createBD(BD, SCHEMA, dadoCon)) {
-//                Conexao con = new Conexao(dadoCon);
-//                con.connect();
-//
-//                var categoriaRepository = new CategoriaRepository(con, SCHEMA); // Cria uma instancia do repositorio de categorias
-//                var categoria = new Categoria(); // Instancia uma nova categoria
-//                categoria.setDescricao("Parafusos, porcas e arruelas"); // Coloca a descrição da categoria
-//                categoriaRepository.incluirCategoria(categoria); // Inclui a categoria no banco de dados
-//
-//                var clienteRepository = new ClienteRepository(con, SCHEMA); // Cria uma instancia do repositorio de clientes
-////                var cliente = new Cliente(); // Instancia um novo cliente
-////                cliente.setNome("Nicolas Jandrovisk"); // Coloca o nome do cliente
-////                cliente.setCpf("17080013258"); // Coloca o CPF do cliente
-////                cliente.setDtNascimento(new Date(99, 1, 1)); // Coloca a data de nascimento do cliente
-////                cliente.setEndereco("Estrada Dr. Rogério de Moura Estevão, Bonsucesso, Teresópolis RJ"); // Coloca o endereço do cliente
-////                cliente.setTelefone("(21)973262421"); // Coloca o telefone do cliente
-////                clienteRepository.incluirCliente(cliente); // Inclui o cliente no banco de dados
-//
-////              clienteRepository.apagarClientePorId(idDoCliente); // Apaga um cliente do banco de dados
-//
-//                List<Cliente> clientola = clienteRepository.buscarClientesPeloNome("nicolas"); // Busca um cliente pelo nome e retorna uma lista de clientes
-//
-//                Util.imprimirCabecalhoCliente(); // Imprime o cabeçalho dos clientes
-//                for (Cliente clientero : clientola) {
-//                    clientero.imprimirDadosCliente(); // Imprime as informações do cliente
-//                } // fazendo um loop imprimindo cada cliente
-//
-//            } else {
-//                System.err.println("Houve um problema na criação do banco de dados.");
-//            }
-//        }
-//    }
 }
