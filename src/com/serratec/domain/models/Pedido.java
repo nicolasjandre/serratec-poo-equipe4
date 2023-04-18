@@ -11,7 +11,12 @@ public class Pedido {
     private Double valorTotal;
     private String obervacao;
     private Cliente cliente;
-    private List<PedItem> produto;
+
+    private double desconto;
+
+       private List<Produto> produtos;
+    private List<PedItem> pedItems;
+
     public int getIdPedido() {
         return idPedido;
     }
@@ -60,11 +65,28 @@ public class Pedido {
         this.cliente = cliente;
     }
 
-    public List<PedItem> getProduto() {
-        return produto;
+    public List<PedItem> getPedItems() {
+        return pedItems;
     }
 
-    public void setProduto(List<PedItem> produto) {
-        this.produto = produto;
+    public void setPedItems(List<PedItem> pedItems) {
+        this.pedItems = pedItems;
+    }
+
+
+    public List<Produto> getProdutos() {
+        return produtos;
+    }
+
+    public void setProdutos(List<Produto> produtos) {
+        this.produtos = produtos;
+    }
+
+    public double getDesconto() {
+        return desconto;
+    }
+
+    public void setDesconto(double desconto) {
+        this.desconto = desconto;
     }
 }
