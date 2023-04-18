@@ -51,7 +51,6 @@ public class PedidoRepository implements CRUDRepository <Pedido>{
 
     @Override
     public void alterar(Pedido pedido) {
-
         String sql = "update " +
                 MainRepository.SCHEMA + ".pedido set " +
                 "dtemissao = '" + pedido.getDtEmissao() + "'" +
@@ -61,22 +60,18 @@ public class PedidoRepository implements CRUDRepository <Pedido>{
                 ", idcliente = '" + pedido.getCliente().getIdCliente() + "' " +
                 "where idpedido = " + pedido.getIdPedido();
         MainRepository.CONEXAO.updateQuery(sql);
-
     }
 
     @Override
     public void apagarPorId(int idPedido) {
-
         String sql = "delete from " + MainRepository.SCHEMA + ".pedido" +
                 " where idPedido = " + idPedido;
 
         MainRepository.CONEXAO.query(sql);
-
     }
 
     @Override
     public Pedido buscarPorId(int idPedido) {
-
         Pedido pedido = null;
         String sql = "SELECT * FROM " + MainRepository.SCHEMA + ".pedido WHERE idpedido = " + idPedido;
         ResultSet tabela;
