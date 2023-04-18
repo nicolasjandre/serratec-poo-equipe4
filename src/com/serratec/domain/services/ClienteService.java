@@ -8,16 +8,19 @@ import com.serratec.utils.Util;
 import java.util.List;
 
 public class ClienteService {
-    public void listarClientePeloNome(String nome) {
+    public void imprimirClientesPeloNome(String nome) {
         ClienteRepository clienteRepository = new ClienteRepository(
                 MainRepository.CONEXAO, MainRepository.SCHEMA);
 
         List<Cliente> clientes = clienteRepository.buscarClientesPeloNome(nome);
 
+        Util.imprimirLinha();
         Util.imprimirCabecalhoCliente();
 
         for (Cliente cliente : clientes) {
             cliente.imprimirDadosCliente();
         }
+
+        Util.imprimirLinha();
     }
 }

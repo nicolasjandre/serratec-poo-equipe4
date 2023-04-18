@@ -1,6 +1,5 @@
 package com.serratec.domain.repository;
 
-import com.serratec.utils.Util;
 import com.serratec.domain.models.Cliente;
 import com.serratec.domain.settings.Conexao;
 
@@ -21,13 +20,13 @@ public class ClienteRepository {
     }
 
     private void prepararSqlInclusao() {
-        String sql = "insert into "+ this.schema + ".cliente";
+        String sql = "insert into " + this.schema + ".cliente";
         sql += " (nome, cpf, dtnascimento, endereco, telefone)";
         sql += " values ";
         sql += " (?, ?, ?, ?, ?)";
 
         try {
-            pInclusao =  conexao.getC().prepareStatement(sql);
+            pInclusao = conexao.getC().prepareStatement(sql);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -123,49 +122,37 @@ public class ClienteRepository {
 
             tabela.close();
         } catch (Exception e) {
-            System.err.println(e);
             e.printStackTrace();
         }
 
         return clientes;
     }
 
-    public void listarClientes() {
-        ResultSet tabela;
-
+    public List<Cliente> buscarTodosOsClientes() {
+        List<Cliente> clientes = new ArrayList<>();
         String sql = "select * from " + this.schema + ".cliente order by idcliente";
+        ResultSet tabela;
 
         tabela = conexao.query(sql);
 
         try {
-            tabela.last();
-            int rowCount = tabela.getRow();
-            System.out.println("Quantidade de clientes: " +rowCount);
-
-            if (rowCount > 0) {
-                System.out.printf("%-13s %-35s %-20s %-30s %-70s %s\n",
-                        "CÓDIGO", "NOME", "CPF", "NASCIMENTO", "ENDEREÇO", "TELEFONE");
-            } else {
-                System.out.println("\nNão possui dados.");
-                return;
-            }
-
-            tabela.beforeFirst();
-
             while (tabela.next()) {
-                System.out.printf("%-13s %-35s %-20s %-30s %-70s %s\n",
-                        tabela.getInt("idcliente"),
-                        tabela.getString("nome"),
-                        Util.formatCPF(tabela.getString("cpf")),
-                        Util.formatDate(tabela.getDate("dtnascimento")),
-                        tabela.getString("endereco"),
-                        tabela.getString("telefone")
-                );
+                Cliente cliente = new Cliente();
+                cliente.setIdCliente(tabela.getInt("idcliente"));
+                cliente.setNome(tabela.getString("nome"));
+                cliente.setCpf(tabela.getString("cpf"));
+                cliente.setDtNascimento(tabela.getDate("dtnascimento"));
+                cliente.setEndereco(tabela.getString("endereco"));
+                cliente.setTelefone(tabela.getString("telefone"));
+
+                clientes.add(cliente);
             }
 
+            tabela.close();
         } catch (Exception e) {
-            System.err.println(e);
             e.printStackTrace();
         }
+
+        return clientes;
     }
 }
