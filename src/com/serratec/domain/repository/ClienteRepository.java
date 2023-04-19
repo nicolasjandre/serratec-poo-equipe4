@@ -94,7 +94,7 @@ public class ClienteRepository implements CRUDRepository<Cliente> {
         var cliente = new Cliente();
         ResultSet tabela;
 
-        String sql = "select * from " + MainRepository.SCHEMA + ".cliente where cpf = " + cpf;
+        String sql = "select * from " + MainRepository.SCHEMA + ".cliente where cpf = '" + cpf + "'";
 
         tabela = MainRepository.CONEXAO.query(sql);
 

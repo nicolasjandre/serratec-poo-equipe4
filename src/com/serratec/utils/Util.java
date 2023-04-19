@@ -3,6 +3,9 @@ package com.serratec.utils;
 import com.serratec.Main;
 
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -32,17 +35,39 @@ public class Util {
                 "CÓDIGO", "NOME", "CPF", "NASCIMENTO", "ENDEREÇO", "TELEFONE");
     }
 
+    public static Date pedirData() {
+        boolean continua;
+        java.util.Date utilDate = null;
+
+        do {
+            continua = false;
+            try {
+                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                String dateStr = Main.input.nextLine();
+                utilDate = dateFormat.parse(dateStr);
+            } catch (ParseException e) {
+                Cor.fontRed();
+                System.out.println("Formato inválido, certifique-se de usar o formato dd/MM/yyyy.");
+                Cor.resetAll();
+                System.out.print("Digite novamente: ");
+                continua = true;
+            }
+        } while (continua);
+
+        return new Date(utilDate.getTime());
+    }
+
     public static void imprimirSistemaIniciado() {
-        Color.backgroundGrey();
+        Cor.backgroundGrey();
         imprimirLinha();
-        Color.resetAll();
-        Color.fontBlue();
+        Cor.resetAll();
+        Cor.fontBlue();
         System.out.printf("%104s %n%110s %n", "SISTEMA INICIADO",
                 "BEM VINDO AO SERRA CONSTRUÇÕES" );
-        Color.resetAll();
-        Color.backgroundGrey();
+        Cor.resetAll();
+        Cor.backgroundGrey();
         imprimirLinha();
-        Color.resetAll();
+        Cor.resetAll();
     }
 
     public static void imprimirLinha() {

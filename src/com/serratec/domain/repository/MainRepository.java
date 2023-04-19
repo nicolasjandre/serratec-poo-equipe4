@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class MainRepository {
-    private static final String PATH = "C:\\";
+    private static final String PATH = "/home/nicolas/";
     private static final String SFILE = "DadosConexao.ini";
     private static final String BD = "equipe4trabalhofinalpoo";
     public static final String SCHEMA = "sistema";
