@@ -1,4 +1,10 @@
 package com.serratec.domain.services;
 
-public interface CRUDService {
+import java.util.List;
+
+public interface CRUDService<T> {
+    void cadastrar();
+    void apagar();
+    void alterar();
+    List<T> buscarTodos();
 }

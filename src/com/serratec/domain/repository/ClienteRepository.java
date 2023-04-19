@@ -78,8 +78,9 @@ public class ClienteRepository implements CRUDRepository<Cliente> {
                 cliente.setDtNascimento(tabela.getDate("dtnascimento"));
                 cliente.setEndereco(tabela.getString("endereco"));
                 cliente.setTelefone(tabela.getString("telefone"));
-            } else
-                System.out.println("Cliente com o ID: [" + idCliente + "] não localizado.");
+            } else {
+                System.err.println("Cliente com o ID: [" + idCliente + "] não localizado.");
+            }
 
             tabela.close();
         } catch (Exception e) {

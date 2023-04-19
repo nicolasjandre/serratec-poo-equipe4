@@ -66,8 +66,8 @@ public class Conexao {
     public void updateQuery(String query){
         try {
             getStatment().executeUpdate(query);
-        }catch (NullPointerException | SQLException ex) {
-                ex.printStackTrace();
+        }catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 

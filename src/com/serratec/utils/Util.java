@@ -1,5 +1,7 @@
 package com.serratec.utils;
 
+import com.serratec.Main;
+
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -11,9 +13,14 @@ public class Util {
 
         LocalDate localDate = LocalDate.parse(inputDate);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd 'de' MMMM 'de' yyyy", new Locale("pt", "BR"));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd 'de' MMMM 'de' yyyy",
+                new Locale("pt", "BR"));
 
         return localDate.format(formatter);
+    }
+    public static void voltarAoMenu() {
+        System.out.println("Pressione qualquer tecla para voltar ao menu");
+        Main.input.nextLine();
     }
     public static String formatCPF(String cpf) {
         StringBuilder sb = new StringBuilder(cpf);
