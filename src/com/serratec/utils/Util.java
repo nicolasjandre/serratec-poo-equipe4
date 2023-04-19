@@ -3,6 +3,9 @@ package com.serratec.utils;
 import com.serratec.Main;
 
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -32,9 +35,27 @@ public class Util {
                 "CÓDIGO", "NOME", "CPF", "NASCIMENTO", "ENDEREÇO", "TELEFONE");
     }
 
-    public static void imprimirCabecalhoProduto() {
-        System.out.printf("%-13s %-35s %-20s %-30s %-70s %s\n",
-                "CÓDIGO", "DESCRIÇÃO", "CATEGORIA", "ESTOQUE", "PREÇO DE CUSTO", "PREÇO DE VENDA");
+    public static Date pedirData() {
+        boolean continua;
+        java.util.Date utilDate = null;
+
+        do {
+            continua = false;
+            try {
+                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                String dateStr = Main.input.nextLine();
+                utilDate = dateFormat.parse(dateStr);
+            } catch (ParseException e) {
+                Cor.fontRed();
+                System.out.println("Formato inválido, certifique-se de usar o formato dd/MM/yyyy.");
+                Cor.resetAll();
+                System.out.print("Digite novamente: ");
+                continua = true;
+            }
+        } while (continua);
+
+        return new Date(utilDate.getTime());
+
     }
 
     public static void imprimirSistemaIniciado() {

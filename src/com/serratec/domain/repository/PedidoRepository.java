@@ -170,7 +170,6 @@ public class PedidoRepository implements CRUDRepository <Pedido>{
         return pedidos;
     }
 
-
     public List<Pedido> buscarPorData(String data1, String data2) {
         List<Pedido> pedidos = new ArrayList<>();
         ResultSet tabela;

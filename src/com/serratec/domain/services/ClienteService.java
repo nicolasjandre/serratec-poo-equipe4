@@ -8,6 +8,9 @@ import com.serratec.utils.Menu;
 import com.serratec.utils.Util;
 
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.InputMismatchException;
 import java.util.List;
 
@@ -17,9 +20,31 @@ public class ClienteService implements CRUDService<Cliente> {
         System.out.printf("%s %n%39s%n %s%n",
                 "_ ".repeat(30), "CADASTRO DE CLIENTE", "_ ".repeat(30));
 
+        var clienteRepository = new ClienteRepository();
+
+        Cliente cliente = pedirDadosParaCriarCliente();
+
+        try {
+            clienteRepository.incluir(cliente);
+            Cor.fontGreen();
+            System.out.print("""
+                    _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+                      CLIENTE CADASTRADO COM SUCESSO
+                    _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+                    """);
+            Cor.resetAll();
+            Util.voltarAoMenu();
+        } catch (Exception e) {
+            Cor.fontRed();
+            System.out.print("Houve um erro ao cadastrar o cliente.");
+            Cor.resetAll();
+            Util.voltarAoMenu();
+        }
+    }
+
+    public Cliente pedirDadosParaCriarCliente() {
         var cliente = new Cliente();
         boolean continua;
-        var clienteRepository = new ClienteRepository();
 
         System.out.print("Digite o nome do cliente: ");
         String nome = null;
@@ -47,7 +72,7 @@ public class ClienteService implements CRUDService<Cliente> {
             try {
                 cpf = Main.input.nextLine();
 
-                if (cpf.length() != 11) {
+                if (cpf.length() != 11 || !cpf.matches("\\d+")) {
                     throw new Exception();
                 }
             } catch (Exception e) {
@@ -104,44 +129,34 @@ public class ClienteService implements CRUDService<Cliente> {
 
         telefone = "(" + DDD + ")" + telefone;
 
-        System.out.print("Digite a data de nascimento (YYYY-MM-DD): ");
-        Date dtNascimento = null;
+        System.out.print("Digite a nova data de nascimento (dd/MM/yyyy): ");
+        java.util.Date utilDate = null;
 
         do {
             continua = false;
             try {
-                dtNascimento = Date.valueOf(Main.input.nextLine());
-            } catch (Exception e) {
+                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                String dateStr = Main.input.nextLine();
+                utilDate = dateFormat.parse(dateStr);
+            } catch (ParseException e) {
                 Cor.fontRed();
-                System.out.println("Formato inválido, certifique-se de usar o formato YYYY-MM-DD.");
+                System.out.println("Formato inválido, certifique-se de usar o formato dd/MM/yyyy.");
+
                 Cor.resetAll();
                 System.out.print("Digite novamente: ");
                 continua = true;
             }
         } while (continua);
 
+        Date dtNascimento = new Date(utilDate.getTime());
+
         cliente.setNome(nome);
         cliente.setCpf(cpf);
         cliente.setDtNascimento(dtNascimento);
         cliente.setEndereco(endereco);
         cliente.setTelefone(telefone);
+        return cliente;
 
-        try {
-            clienteRepository.incluir(cliente);
-            Cor.fontGreen();
-            System.out.print("""
-                    _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-                      CLIENTE CADASTRADO COM SUCESSO
-                    _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-                    """);
-            Cor.resetAll();
-            Util.voltarAoMenu();
-        } catch (Exception e) {
-            Cor.fontRed();
-            System.out.print("Houve um erro ao cadastrar o cliente.");
-            Cor.resetAll();
-            Util.voltarAoMenu();
-        }
     }
     @Override
     public void apagar() {
@@ -178,7 +193,7 @@ public class ClienteService implements CRUDService<Cliente> {
     }
     @Override
     public void alterar() {
-        var cliente = new Cliente();
+        var clienteQueSeraAlterado = new Cliente();
         int idCliente;
         boolean continua;
         var clienteRepository = new ClienteRepository();
@@ -190,9 +205,9 @@ public class ClienteService implements CRUDService<Cliente> {
             try {
                 idCliente = Main.input.nextInt();
 
-                cliente = clienteRepository.buscarPorId(idCliente);
+                clienteQueSeraAlterado = clienteRepository.buscarPorId(idCliente);
 
-                if (cliente.getNome().isEmpty()) {
+                if (clienteQueSeraAlterado.getNome().isEmpty()) {
                     throw new NullPointerException();
                 }
 
@@ -213,113 +228,16 @@ public class ClienteService implements CRUDService<Cliente> {
         } while (continua);
         Main.input.nextLine();
 
-        System.out.print("Digite o novo nome: ");
-        String nome = null;
-        do {
-            continua = false;
-            try {
-                nome = Main.input.nextLine();
-
-                if (nome.isBlank()) {
-                    throw new Exception();
-                }
-            } catch (Exception e) {
-                Cor.fontRed();
-                System.out.println("O nome não pode estar vazio");
-                Cor.resetAll();
-                System.out.print("Digite novamente: ");
-                continua = true;
-            }
-        } while (continua);
-
-        System.out.print("Digite o novo CPF (use somente números): ");
-        String cpf = "A";
-        do {
-            continua = false;
-            try {
-                cpf = Main.input.nextLine();
-
-                if (cpf.length() != 11) {
-                    throw new Exception();
-                }
-            } catch (Exception e) {
-                Cor.fontRed();
-                System.out.println("O CPF precisa ter 11 caracteres.");
-                Cor.resetAll();
-                System.out.print("Digite novamente: ");
-                continua = true;
-            }
-        } while (continua);
-
-        System.out.print("Digite o novo endereço: ");
-        var endereco = Main.input.nextLine();
-
-        System.out.println("Digite o novo telefone.");
-        String DDD = null;
-        String telefone = null;
-
-        System.out.print("DDD: ");
-        do {
-            continua = false;
-            try {
-                DDD = Main.input.nextLine();
-
-                if (!DDD.matches("\\d+") || DDD.length() != 2) {
-                    throw new Exception();
-                }
-            } catch (Exception e) {
-                Cor.fontRed();
-                System.out.println("O DDD deve conter apenas números e duas casas. Ex: 21");
-                Cor.resetAll();
-                System.out.print("Digite novamente: ");
-                continua = true;
-            }
-        } while (continua);
-
-        System.out.print("Número: ");
-        do {
-            continua = false;
-            try {
-                telefone = Main.input.nextLine();
-
-                if (!telefone.matches("\\d+")) {
-                    throw new Exception();
-                }
-            } catch (Exception e) {
-                Cor.fontRed();
-                System.out.println("O número de telefone deve conter apenas números.");
-                Cor.resetAll();
-                System.out.print("Digite novamente: ");
-                continua = true;
-            }
-        } while (continua);
-
-        telefone = "(" + DDD + ")" + telefone;
-
-        System.out.print("Digite a nova data de nascimento (YYYY-MM-DD): ");
-        Date dtNascimento = null;
-
-        do {
-            continua = false;
-            try {
-                dtNascimento = Date.valueOf(Main.input.nextLine());
-            } catch (Exception e) {
-                Cor.fontRed();
-                System.out.println("Formato inválido, certifique-se de usar o formato YYYY-MM-DD.");
-                Cor.resetAll();
-                System.out.print("Digite novamente: ");
-                continua = true;
-            }
-        } while (continua);
-
-        cliente.setNome(nome);
-        cliente.setCpf(cpf);
-        cliente.setDtNascimento(dtNascimento);
-        cliente.setEndereco(endereco);
-        cliente.setTelefone(telefone);
+        Cliente clienteNovo = pedirDadosParaCriarCliente();
+        clienteQueSeraAlterado.setEndereco(clienteNovo.getEndereco());
+        clienteQueSeraAlterado.setTelefone(clienteNovo.getTelefone());
+        clienteQueSeraAlterado.setCpf(clienteNovo.getCpf());
+        clienteQueSeraAlterado.setDtNascimento(clienteNovo.getDtNascimento());
+        clienteQueSeraAlterado.setNome(clienteNovo.getNome());
 
         try {
-            clienteRepository.alterar(cliente);
+            clienteRepository.alterar(clienteQueSeraAlterado);
+
             Cor.fontGreen();
             System.out.print("""
                     _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
@@ -424,6 +342,157 @@ public class ClienteService implements CRUDService<Cliente> {
         }
         System.out.print("Pressione qualquer tecla para voltar ao menu");
         Main.input.nextLine();
+    }
+    public Cliente buscarClientePorCpf() {
+        ClienteRepository clienteRepository = new ClienteRepository();
+        String cpf = "A";
+        char opcao = 'R';
+        boolean continua;
+        var cliente = new Cliente();
+
+        do {
+            System.out.print("Digite o CPF (use somente números): ");
+
+            do {
+                continua = false;
+                try {
+                    cpf = Main.input.nextLine();
+
+                    if (cpf.length() != 11 || !cpf.matches("\\d+")) {
+                        throw new Exception();
+                    }
+                } catch (Exception e) {
+                    Cor.fontRed();
+                    System.out.println("O CPF precisa ter 11 caracteres.");
+                    Cor.resetAll();
+                    System.out.print("Digite novamente: ");
+                    continua = true;
+                }
+            } while (continua);
+
+            cliente = clienteRepository.buscarPorCpf(cpf);
+
+            if (cliente.getNome() == null || cliente.getNome().isBlank()) continue;
+
+            System.out.println("Deseja escolher o cliente " + cliente.getNome() + "? S/N");
+
+            do {
+                String op = Main.input.nextLine().toUpperCase() + "R";
+                opcao = op.charAt(0);
+
+                switch (opcao) {
+                    case 'S' -> {
+                        return cliente;
+                    }
+                    case 'N' -> {}
+                    default -> System.out.print("Opção inválida, digite novamente: ");
+                }
+            } while (opcao != 'N');
+
+        } while (opcao != 'N');
+
+        return cliente;
+    }
+    public Cliente buscarClientePeloNome() {
+        ClienteRepository clienteRepository = new ClienteRepository();
+        List<Cliente> clientes;
+        var cliente = new Cliente();
+        String nome;
+        char opcao;
+
+        do {
+            do {
+                System.out.print("Digite o nome do cliente: ");
+                nome = Main.input.nextLine();
+
+                clientes = clienteRepository.buscarPorNome(nome);
+
+                if (clientes.size() != 0) {
+                    Cor.fontGreen();
+                    Util.imprimirLinha();
+                    Cor.resetAll();
+                    Util.imprimirCabecalhoCliente();
+
+                    for (Cliente clienteL : clientes) {
+                        clienteL.imprimirDadosCliente();
+                    }
+                    Cor.fontGreen();
+                    Util.imprimirLinha();
+                    Cor.resetAll();
+
+                    System.out.println("Seja específico no nome do cliente até restar somente 1");
+                } else {
+                    Util.imprimirLinha();
+                    Cor.fontRed();
+                    System.out.printf("%96s%n", "NENHUM CLIENTE ENCONTRADO");
+                    Cor.resetAll();
+                    Util.imprimirLinha();
+                }
+            } while (clientes.size() != 1);
+
+            cliente = clientes.get(0);
+            System.out.println("Deseja escolher o cliente " + cliente.getNome() + "? S/N");
+
+            do {
+                String op = Main.input.nextLine().toUpperCase() + "R";
+                opcao = op.charAt(0);
+
+                switch (opcao) {
+                    case 'S' -> {
+                        return cliente;
+                    }
+                    case 'N' -> {}
+                    default -> System.out.print("Opção inválida, digite novamente: ");
+                }
+            } while (opcao != 'N');
+        } while (opcao != 'S');
+
+        return cliente;
+    }
+    public Cliente buscarClientesPeloId() {
+        ClienteRepository clienteRepository = new ClienteRepository();
+        var cliente = new Cliente();
+        char opcao = 'R';
+        int idCliente = 0;
+
+        do {
+            System.out.print("Digite o código do cliente: ");
+
+            do {
+                try {
+                    idCliente = Main.input.nextInt();
+                } catch (Exception e) {
+                    Cor.fontRed();
+                    System.out.println("O código precisa ser um número inteiro maior que 0");
+                    Cor.resetAll();
+                    System.out.print("Digite novamente: ");
+                    Main.input.nextLine();
+                }
+            } while (idCliente == 0);
+            Main.input.nextLine();
+
+            cliente = clienteRepository.buscarPorId(idCliente);
+
+            if (cliente.getNome() == null || cliente.getNome().isBlank()) continue;
+
+            System.out.println("Deseja escolher o cliente " + cliente.getNome() + "? S/N");
+
+            do {
+                String op = Main.input.nextLine().toUpperCase() + "R";
+                opcao = op.charAt(0);
+
+                switch (opcao) {
+                    case 'S' -> {
+                        return cliente;
+                    }
+                    case 'N' -> {}
+                    default -> System.out.print("Opção inválida, digite novamente: ");
+                }
+            } while (opcao != 'N');
+
+        } while (opcao == 'N');
+
+        return cliente;
     }
     public void criarClientesIniciais() {
         var clienteRepository = new ClienteRepository();
