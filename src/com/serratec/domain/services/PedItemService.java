@@ -9,10 +9,8 @@ import com.serratec.domain.repository.PedidoRepository;
 public class PedItemService {
 
     public void criarPedItemAposPedido(Pedido pedido) {
-
         var pedidoRepository = new PedidoRepository();
         var ultimoPedido = pedidoRepository.buscarUltimoPedidoCriado();
-
 
         for (Produto produto : pedido.getProdutos()) {
             var pedItemRepository = new PedItemRepository();
@@ -24,9 +22,7 @@ public class PedItemService {
             pedItem.setVlDesconto(pedido.getDesconto());
             pedItem.setQuantidade(produto.getQtdVendida());
 
-
             pedItemRepository.incluir(pedItem);
         }
-
     }
 }

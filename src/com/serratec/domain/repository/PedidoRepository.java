@@ -41,8 +41,6 @@ public class PedidoRepository implements CRUDRepository <Pedido>{
 
             pInclusao.executeUpdate();
 
-
-
         } catch (Exception e) {
             if (e.getLocalizedMessage().contains("is null")) {
                 System.err.println("\nPedido não incluído.\nVerifique se foi chamado o connect:\n" + e);
@@ -68,7 +66,7 @@ public class PedidoRepository implements CRUDRepository <Pedido>{
     @Override
     public void apagarPorId(int idPedido) {
         String sql = "delete from " + MainRepository.SCHEMA + ".pedido" +
-                " where idPedido = " + idPedido;
+                " where idpedido = " + idPedido;
 
         MainRepository.CONEXAO.query(sql);
     }

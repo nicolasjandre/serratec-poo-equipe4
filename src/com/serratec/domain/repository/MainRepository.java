@@ -1,8 +1,8 @@
 package com.serratec.domain.repository;
 
-import com.serratec.domain.files.ArquivoTxt;
-import com.serratec.domain.settings.Conexao;
-import com.serratec.domain.settings.DadosConexao;
+import com.serratec.files.ArquivoTxt;
+import com.serratec.settings.Conexao;
+import com.serratec.settings.DadosConexao;
 import com.serratec.utils.Util;
 
 import java.sql.ResultSet;

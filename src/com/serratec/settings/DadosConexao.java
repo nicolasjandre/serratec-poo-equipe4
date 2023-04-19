@@ -1,4 +1,4 @@
-package com.serratec.domain.settings;
+package com.serratec.settings;
 
 public class DadosConexao {
     private String local;

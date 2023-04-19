@@ -5,16 +5,13 @@ import java.util.List;
 
 public class Pedido {
     private int idPedido;
-
     private Date dtEmissao;
     private Date dtEntrega;
     private Double valorTotal;
     private String obervacao;
     private Cliente cliente;
-
     private double desconto;
-
-       private List<Produto> produtos;
+    private List<Produto> produtos;
     private List<PedItem> pedItems;
 
     public int getIdPedido() {

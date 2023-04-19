@@ -89,6 +89,33 @@ public class ClienteRepository implements CRUDRepository<Cliente> {
         return cliente;
     }
 
+    public Cliente buscarPorCpf(String cpf) {
+        var cliente = new Cliente();
+        ResultSet tabela;
+
+        String sql = "select * from " + MainRepository.SCHEMA + ".cliente where cpf = " + cpf;
+
+        tabela = MainRepository.CONEXAO.query(sql);
+
+        try {
+            if (tabela.next()) {
+                cliente.setIdCliente(tabela.getInt("idcliente"));
+                cliente.setNome(tabela.getString("nome"));
+                cliente.setCpf(tabela.getString("cpf"));
+                cliente.setDtNascimento(tabela.getDate("dtnascimento"));
+                cliente.setEndereco(tabela.getString("endereco"));
+                cliente.setTelefone(tabela.getString("telefone"));
+            } else
+                System.out.println("Cliente com o CPF: [" + cpf + "] não localizado.");
+
+            tabela.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return cliente;
+    }
+
     @Override
     public void apagarPorId(int idCliente) {
         String sql = "delete from " + MainRepository.SCHEMA + ".cliente" +
