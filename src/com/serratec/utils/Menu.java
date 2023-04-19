@@ -36,7 +36,7 @@ public class Menu {
                 1) Novo Produto
                 2) Alterar Produto
                 3) Apagar Produto
-                5) Imprimir todos os produtos
+                4) Imprimir todos os produtos
                 0) Voltar 
                 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
                 Digite sua opção:""");

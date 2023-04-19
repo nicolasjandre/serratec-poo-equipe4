@@ -32,20 +32,27 @@ public class Util {
                 "CÓDIGO", "NOME", "CPF", "NASCIMENTO", "ENDEREÇO", "TELEFONE");
     }
 
+    public static void imprimirCabecalhoProduto() {
+        System.out.printf("%-13s %-35s %-20s %-30s %-70s %s\n",
+                "CÓDIGO", "DESCRIÇÃO", "CATEGORIA", "ESTOQUE", "PREÇO DE CUSTO", "PREÇO DE VENDA");
+    }
+
     public static void imprimirSistemaIniciado() {
-        Color.backgroundGrey();
+        Cor.backgroundGrey();
         imprimirLinha();
-        Color.resetAll();
-        Color.fontBlue();
+        Cor.resetAll();
+        Cor.fontBlue();
         System.out.printf("%104s %n%110s %n", "SISTEMA INICIADO",
                 "BEM VINDO AO SERRA CONSTRUÇÕES" );
-        Color.resetAll();
-        Color.backgroundGrey();
+        Cor.resetAll();
+        Cor.backgroundGrey();
         imprimirLinha();
-        Color.resetAll();
+        Cor.resetAll();
     }
 
     public static void imprimirLinha() {
         System.out.println("_ ".repeat(96));
     }
 }
+
+

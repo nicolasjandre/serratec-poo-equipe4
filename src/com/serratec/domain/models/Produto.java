@@ -9,6 +9,11 @@ public class Produto {
     private Double vlVenda;
     private double qtdVendida;
 
+    public void imprimirDadosProduto() {
+        System.out.printf("%-13s %-35s %-20s %-30s %-70s %s\n",
+                getIdProduto(), getDescricao(), getIdCategoria(), getEstoque(), getVlCusto(), getVlVenda());
+    }
+
     public int getIdProduto() {
         return idProduto;
     }
