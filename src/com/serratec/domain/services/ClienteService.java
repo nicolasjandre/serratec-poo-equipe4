@@ -3,6 +3,7 @@ package com.serratec.domain.services;
 import com.serratec.Main;
 import com.serratec.domain.models.Cliente;
 import com.serratec.domain.repository.ClienteRepository;
+import com.serratec.utils.Color;
 import com.serratec.utils.Menu;
 import com.serratec.utils.Util;
 
@@ -20,10 +21,26 @@ public class ClienteService implements CRUDService<Cliente> {
         boolean continua;
         var clienteRepository = new ClienteRepository();
 
-        System.out.println("Digite o nome do cliente: ");
-        var nome = Main.input.nextLine();
+        System.out.print("Digite o nome do cliente: ");
+        String nome = null;
+        do {
+            continua = false;
+            try {
+                nome = Main.input.nextLine();
 
-        System.out.println("Digite o CPF (use somente números): ");
+                if (nome.isBlank()) {
+                    throw new Exception();
+                }
+            } catch (Exception e) {
+                Color.fontRed();
+                System.out.println("O nome não pode estar vazio");
+                Color.resetAll();
+                System.out.print("Digite novamente: ");
+                continua = true;
+            }
+        } while (continua);
+
+        System.out.print("Digite o CPF (use somente números): ");
         String cpf = "A";
         do {
             continua = false;
@@ -34,26 +51,71 @@ public class ClienteService implements CRUDService<Cliente> {
                     throw new Exception();
                 }
             } catch (Exception e) {
-                System.out.print("O CPF precisa ter 11 caracteres, digite novamente: ");
+                Color.fontRed();
+                System.out.println("O CPF precisa ter 11 caracteres.");
+                Color.resetAll();
+                System.out.print("Digite novamente: ");
                 continua = true;
             }
         } while (continua);
 
-        System.out.println("Digite o endereço: ");
+        System.out.print("Digite endereço: ");
         var endereco = Main.input.nextLine();
 
-        System.out.println("Digite o telefone: ");
-        var telefone = Main.input.nextLine();
+        System.out.println("Digite telefone.");
+        String DDD = null;
+        String telefone = null;
 
-        System.out.println("Digite a data de nascimento (YYYY-MM-DD): ");
-        Date dtNascimento = Date.valueOf("2000-01-01");
+        System.out.print("DDD: ");
+        do {
+            continua = false;
+            try {
+                DDD = Main.input.nextLine();
+
+                if (!DDD.matches("\\d+") || DDD.length() != 2) {
+                    throw new Exception();
+                }
+            } catch (Exception e) {
+                Color.fontRed();
+                System.out.println("O DDD deve conter apenas números e duas casas. Ex: 21");
+                Color.resetAll();
+                System.out.print("Digite novamente: ");
+                continua = true;
+            }
+        } while (continua);
+
+        System.out.print("Número: ");
+        do {
+            continua = false;
+            try {
+                telefone = Main.input.nextLine();
+
+                if (!telefone.matches("\\d+")) {
+                    throw new Exception();
+                }
+            } catch (Exception e) {
+                Color.fontRed();
+                System.out.println("O número de telefone deve conter apenas números.");
+                Color.resetAll();
+                System.out.print("Digite novamente: ");
+                continua = true;
+            }
+        } while (continua);
+
+        telefone = "(" + DDD + ")" + telefone;
+
+        System.out.print("Digite a data de nascimento (YYYY-MM-DD): ");
+        Date dtNascimento = null;
 
         do {
             continua = false;
             try {
                 dtNascimento = Date.valueOf(Main.input.nextLine());
             } catch (Exception e) {
-                System.out.print("Formato inválido, digite novamente (YYYY-MM-DD): ");
+                Color.fontRed();
+                System.out.println("Formato inválido, certifique-se de usar o formato YYYY-MM-DD.");
+                Color.resetAll();
+                System.out.print("Digite novamente: ");
                 continua = true;
             }
         } while (continua);
@@ -64,7 +126,22 @@ public class ClienteService implements CRUDService<Cliente> {
         cliente.setEndereco(endereco);
         cliente.setTelefone(telefone);
 
-        clienteRepository.incluir(cliente);
+        try {
+            clienteRepository.incluir(cliente);
+            Color.fontGreen();
+            System.out.print("""
+                    _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+                      CLIENTE CADASTRADO COM SUCESSO
+                    _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+                    """);
+            Color.resetAll();
+            Util.voltarAoMenu();
+        } catch (Exception e) {
+            Color.fontRed();
+            System.out.print("Houve um erro ao cadastrar o cliente.");
+            Color.resetAll();
+            Util.voltarAoMenu();
+        }
     }
     @Override
     public void apagar() {
@@ -121,7 +198,10 @@ public class ClienteService implements CRUDService<Cliente> {
 
             } catch (InputMismatchException | NullPointerException e) {
                 if (e instanceof InputMismatchException) {
-                    System.out.print("Valor inválido, digite um número inteiro");
+                    Color.fontRed();
+                    System.out.println("Valor inválido, você deve usar números inteiros");
+                    Color.resetAll();
+                    System.out.print("Digite novamente: ");
                     continua = true;
                     Main.input.nextLine();
                 } else {
@@ -133,40 +213,101 @@ public class ClienteService implements CRUDService<Cliente> {
         } while (continua);
         Main.input.nextLine();
 
-        System.out.println("Digite o novo nome: ");
-        var nome = Main.input.nextLine();
+        System.out.print("Digite o novo nome: ");
+        String nome = null;
+        do {
+            continua = false;
+            try {
+                nome = Main.input.nextLine();
 
-        System.out.println("Digite o novo CPF (use somente números): ");
+                if (nome.isBlank()) {
+                    throw new Exception();
+                }
+            } catch (Exception e) {
+                Color.fontRed();
+                System.out.println("O nome não pode estar vazio");
+                Color.resetAll();
+                System.out.print("Digite novamente: ");
+                continua = true;
+            }
+        } while (continua);
+
+        System.out.print("Digite o novo CPF (use somente números): ");
         String cpf = "A";
         do {
             continua = false;
             try {
                 cpf = Main.input.nextLine();
 
-                if (cpf.length() > 11 || cpf.length() < 11) {
+                if (cpf.length() != 11) {
                     throw new Exception();
                 }
             } catch (Exception e) {
-                System.out.print("O CPF precisa ter 11 caracteres, digite novamente: ");
+                Color.fontRed();
+                System.out.println("O CPF precisa ter 11 caracteres.");
+                Color.resetAll();
+                System.out.print("Digite novamente: ");
                 continua = true;
             }
         } while (continua);
 
-        System.out.println("Digite o novo endereço: ");
+        System.out.print("Digite o novo endereço: ");
         var endereco = Main.input.nextLine();
 
-        System.out.println("Digite o novo telefone: ");
-        var telefone = Main.input.nextLine();
+        System.out.println("Digite o novo telefone.");
+        String DDD = null;
+        String telefone = null;
 
-        System.out.println("Digite a nova data de nascimento (YYYY-MM-DD): ");
-        Date dtNascimento = Date.valueOf("2000-01-01");
+        System.out.print("DDD: ");
+        do {
+            continua = false;
+            try {
+                DDD = Main.input.nextLine();
+
+                if (!DDD.matches("\\d+") || DDD.length() != 2) {
+                    throw new Exception();
+                }
+            } catch (Exception e) {
+                Color.fontRed();
+                System.out.println("O DDD deve conter apenas números e duas casas. Ex: 21");
+                Color.resetAll();
+                System.out.print("Digite novamente: ");
+                continua = true;
+            }
+        } while (continua);
+
+        System.out.print("Número: ");
+        do {
+            continua = false;
+            try {
+                telefone = Main.input.nextLine();
+
+                if (!telefone.matches("\\d+")) {
+                    throw new Exception();
+                }
+            } catch (Exception e) {
+                Color.fontRed();
+                System.out.println("O número de telefone deve conter apenas números.");
+                Color.resetAll();
+                System.out.print("Digite novamente: ");
+                continua = true;
+            }
+        } while (continua);
+
+        telefone = "(" + DDD + ")" + telefone;
+
+        System.out.print("Digite a nova data de nascimento (YYYY-MM-DD): ");
+        Date dtNascimento = null;
 
         do {
             continua = false;
             try {
                 dtNascimento = Date.valueOf(Main.input.nextLine());
             } catch (Exception e) {
-                System.out.print("Formato inválido, digite novamente (YYYY-MM-DD): ");
+                Color.fontRed();
+                System.out.println("Formato inválido, certifique-se de usar o formato YYYY-MM-DD.");
+                Color.resetAll();
+                System.out.print("Digite novamente: ");
                 continua = true;
             }
         } while (continua);
@@ -176,7 +317,23 @@ public class ClienteService implements CRUDService<Cliente> {
         cliente.setDtNascimento(dtNascimento);
         cliente.setEndereco(endereco);
         cliente.setTelefone(telefone);
-        clienteRepository.alterar(cliente);
+
+        try {
+            clienteRepository.alterar(cliente);
+            Color.fontGreen();
+            System.out.print("""
+                    _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+                      CLIENTE ALTERADO COM SUCESSO
+                    _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+                    """);
+            Color.resetAll();
+            Util.voltarAoMenu();
+        } catch (Exception e) {
+            Color.fontRed();
+            System.out.print("Houve um erro ao alterar dados do cliente.");
+            Color.resetAll();
+            Util.voltarAoMenu();
+        }
     }
     @Override
     public List<Cliente> buscarTodos() {
@@ -203,9 +360,11 @@ public class ClienteService implements CRUDService<Cliente> {
                 case '5' -> imprimirTodosOsClientes();
                 case '0' -> {}
                 default -> {
+                    Color.fontRed();
                     System.out.println("""
                         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
                         Opção inválida, digite novamente""");
+                    Color.resetAll();
                     continua = true;
                 }
             }
