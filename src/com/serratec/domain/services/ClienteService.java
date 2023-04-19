@@ -141,6 +141,7 @@ public class ClienteService implements CRUDService<Cliente> {
             } catch (ParseException e) {
                 Cor.fontRed();
                 System.out.println("Formato inválido, certifique-se de usar o formato dd/MM/yyyy.");
+
                 Cor.resetAll();
                 System.out.print("Digite novamente: ");
                 continua = true;
@@ -155,6 +156,7 @@ public class ClienteService implements CRUDService<Cliente> {
         cliente.setEndereco(endereco);
         cliente.setTelefone(telefone);
         return cliente;
+
     }
     @Override
     public void apagar() {
@@ -235,6 +237,7 @@ public class ClienteService implements CRUDService<Cliente> {
 
         try {
             clienteRepository.alterar(clienteQueSeraAlterado);
+
             Cor.fontGreen();
             System.out.print("""
                     _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
