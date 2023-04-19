@@ -11,6 +11,11 @@ import java.util.List;
 
 public class PedItemRepository implements CRUDRepository<PedItem> {
     PreparedStatement pInclusao = null;
+
+    public PedItemRepository() {
+        prepararSqlInclusao();
+    }
+
     @Override
     public void prepararSqlInclusao() {
         String sql = "insert into " + MainRepository.SCHEMA + ".peditem";

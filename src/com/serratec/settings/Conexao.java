@@ -1,4 +1,4 @@
-package com.serratec.domain.settings;
+package com.serratec.settings;
 
 import java.sql.*;
 
@@ -11,7 +11,7 @@ public class Conexao {
     private String str_conexao;
     private String driverjdbc;
 
-    public Conexao(com.serratec.domain.settings.DadosConexao dados) {
+    public Conexao(com.serratec.settings.DadosConexao dados) {
         if (dados.getBd().equals("PostgreSql")){
             setStr_conexao("jdbc:postgresql://"+ dados.getLocal() +":" + dados.getPorta() +"/"+ dados.getBanco());
             setLocal(dados.getLocal());

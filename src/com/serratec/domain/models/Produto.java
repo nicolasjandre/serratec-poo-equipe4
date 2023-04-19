@@ -3,11 +3,10 @@ package com.serratec.domain.models;
 public class Produto {
     private int idProduto;
     private String descricao;
-    private Categoria categoria;
+    private int idCategoria;
     private Double estoque;
     private Double vlCusto;
     private Double vlVenda;
-
     private double qtdVendida;
 
     public int getIdProduto() {
@@ -26,12 +25,12 @@ public class Produto {
         this.descricao = descricao;
     }
 
-    public Categoria getCategoria() {
-        return categoria;
+    public int getIdCategoria() {
+        return idCategoria;
     }
 
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
+    public void setIdCategoria(int idCategoria) {
+        this.idCategoria = idCategoria;
     }
 
     public Double getVlCusto() {
