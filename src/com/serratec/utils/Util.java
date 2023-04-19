@@ -33,10 +33,16 @@ public class Util {
     }
 
     public static void imprimirSistemaIniciado() {
+        Color.backgroundGrey();
         imprimirLinha();
+        Color.resetAll();
+        Color.fontBlue();
         System.out.printf("%104s %n%110s %n", "SISTEMA INICIADO",
                 "BEM VINDO AO SERRA CONSTRUÇÕES" );
+        Color.resetAll();
+        Color.backgroundGrey();
         imprimirLinha();
+        Color.resetAll();
     }
 
     public static void imprimirLinha() {
