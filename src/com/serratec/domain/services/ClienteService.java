@@ -374,17 +374,22 @@ public class ClienteService implements CRUDService<Cliente> {
         List<Cliente> clientes = buscarTodos();
 
         if (clientes.size() != 0) {
+            Color.fontGreen();
             Util.imprimirLinha();
+            Color.resetAll();
             Util.imprimirCabecalhoCliente();
 
             for (Cliente cliente : clientes) {
                 cliente.imprimirDadosCliente();
             }
-
+            Color.fontGreen();
             Util.imprimirLinha();
+            Color.resetAll();
         } else {
             Util.imprimirLinha();
+            Color.fontRed();
             System.out.printf("%96s%n", "NENHUM CLIENTE ENCONTRADO");
+            Color.resetAll();
             Util.imprimirLinha();
         }
         System.out.print("Pressione qualquer tecla para voltar ao menu");
@@ -400,17 +405,22 @@ public class ClienteService implements CRUDService<Cliente> {
         List<Cliente> clientes = clienteRepository.buscarPorNome(nome);
 
         if (clientes.size() != 0) {
+            Color.fontGreen();
             Util.imprimirLinha();
+            Color.resetAll();
             Util.imprimirCabecalhoCliente();
 
             for (Cliente cliente : clientes) {
                 cliente.imprimirDadosCliente();
             }
-
+            Color.fontGreen();
             Util.imprimirLinha();
+            Color.resetAll();
         } else {
             Util.imprimirLinha();
+            Color.fontRed();
             System.out.printf("%96s%n", "NENHUM CLIENTE ENCONTRADO");
+            Color.resetAll();
             Util.imprimirLinha();
         }
         System.out.print("Pressione qualquer tecla para voltar ao menu");
