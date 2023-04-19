@@ -3,7 +3,7 @@ package com.serratec.domain.services;
 import com.serratec.Main;
 import com.serratec.domain.models.Cliente;
 import com.serratec.domain.repository.ClienteRepository;
-import com.serratec.utils.Color;
+import com.serratec.utils.Cor;
 import com.serratec.utils.Menu;
 import com.serratec.utils.Util;
 
@@ -32,9 +32,9 @@ public class ClienteService implements CRUDService<Cliente> {
                     throw new Exception();
                 }
             } catch (Exception e) {
-                Color.fontRed();
+                Cor.fontRed();
                 System.out.println("O nome não pode estar vazio");
-                Color.resetAll();
+                Cor.resetAll();
                 System.out.print("Digite novamente: ");
                 continua = true;
             }
@@ -51,9 +51,9 @@ public class ClienteService implements CRUDService<Cliente> {
                     throw new Exception();
                 }
             } catch (Exception e) {
-                Color.fontRed();
+                Cor.fontRed();
                 System.out.println("O CPF precisa ter 11 caracteres.");
-                Color.resetAll();
+                Cor.resetAll();
                 System.out.print("Digite novamente: ");
                 continua = true;
             }
@@ -76,9 +76,9 @@ public class ClienteService implements CRUDService<Cliente> {
                     throw new Exception();
                 }
             } catch (Exception e) {
-                Color.fontRed();
+                Cor.fontRed();
                 System.out.println("O DDD deve conter apenas números e duas casas. Ex: 21");
-                Color.resetAll();
+                Cor.resetAll();
                 System.out.print("Digite novamente: ");
                 continua = true;
             }
@@ -94,9 +94,9 @@ public class ClienteService implements CRUDService<Cliente> {
                     throw new Exception();
                 }
             } catch (Exception e) {
-                Color.fontRed();
+                Cor.fontRed();
                 System.out.println("O número de telefone deve conter apenas números.");
-                Color.resetAll();
+                Cor.resetAll();
                 System.out.print("Digite novamente: ");
                 continua = true;
             }
@@ -112,9 +112,9 @@ public class ClienteService implements CRUDService<Cliente> {
             try {
                 dtNascimento = Date.valueOf(Main.input.nextLine());
             } catch (Exception e) {
-                Color.fontRed();
+                Cor.fontRed();
                 System.out.println("Formato inválido, certifique-se de usar o formato YYYY-MM-DD.");
-                Color.resetAll();
+                Cor.resetAll();
                 System.out.print("Digite novamente: ");
                 continua = true;
             }
@@ -128,18 +128,18 @@ public class ClienteService implements CRUDService<Cliente> {
 
         try {
             clienteRepository.incluir(cliente);
-            Color.fontGreen();
+            Cor.fontGreen();
             System.out.print("""
                     _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
                       CLIENTE CADASTRADO COM SUCESSO
                     _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
                     """);
-            Color.resetAll();
+            Cor.resetAll();
             Util.voltarAoMenu();
         } catch (Exception e) {
-            Color.fontRed();
+            Cor.fontRed();
             System.out.print("Houve um erro ao cadastrar o cliente.");
-            Color.resetAll();
+            Cor.resetAll();
             Util.voltarAoMenu();
         }
     }
@@ -198,9 +198,9 @@ public class ClienteService implements CRUDService<Cliente> {
 
             } catch (InputMismatchException | NullPointerException e) {
                 if (e instanceof InputMismatchException) {
-                    Color.fontRed();
+                    Cor.fontRed();
                     System.out.println("Valor inválido, você deve usar números inteiros");
-                    Color.resetAll();
+                    Cor.resetAll();
                     System.out.print("Digite novamente: ");
                     continua = true;
                     Main.input.nextLine();
@@ -224,9 +224,9 @@ public class ClienteService implements CRUDService<Cliente> {
                     throw new Exception();
                 }
             } catch (Exception e) {
-                Color.fontRed();
+                Cor.fontRed();
                 System.out.println("O nome não pode estar vazio");
-                Color.resetAll();
+                Cor.resetAll();
                 System.out.print("Digite novamente: ");
                 continua = true;
             }
@@ -243,9 +243,9 @@ public class ClienteService implements CRUDService<Cliente> {
                     throw new Exception();
                 }
             } catch (Exception e) {
-                Color.fontRed();
+                Cor.fontRed();
                 System.out.println("O CPF precisa ter 11 caracteres.");
-                Color.resetAll();
+                Cor.resetAll();
                 System.out.print("Digite novamente: ");
                 continua = true;
             }
@@ -268,9 +268,9 @@ public class ClienteService implements CRUDService<Cliente> {
                     throw new Exception();
                 }
             } catch (Exception e) {
-                Color.fontRed();
+                Cor.fontRed();
                 System.out.println("O DDD deve conter apenas números e duas casas. Ex: 21");
-                Color.resetAll();
+                Cor.resetAll();
                 System.out.print("Digite novamente: ");
                 continua = true;
             }
@@ -286,9 +286,9 @@ public class ClienteService implements CRUDService<Cliente> {
                     throw new Exception();
                 }
             } catch (Exception e) {
-                Color.fontRed();
+                Cor.fontRed();
                 System.out.println("O número de telefone deve conter apenas números.");
-                Color.resetAll();
+                Cor.resetAll();
                 System.out.print("Digite novamente: ");
                 continua = true;
             }
@@ -304,9 +304,9 @@ public class ClienteService implements CRUDService<Cliente> {
             try {
                 dtNascimento = Date.valueOf(Main.input.nextLine());
             } catch (Exception e) {
-                Color.fontRed();
+                Cor.fontRed();
                 System.out.println("Formato inválido, certifique-se de usar o formato YYYY-MM-DD.");
-                Color.resetAll();
+                Cor.resetAll();
                 System.out.print("Digite novamente: ");
                 continua = true;
             }
@@ -320,18 +320,18 @@ public class ClienteService implements CRUDService<Cliente> {
 
         try {
             clienteRepository.alterar(cliente);
-            Color.fontGreen();
+            Cor.fontGreen();
             System.out.print("""
                     _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
                       CLIENTE ALTERADO COM SUCESSO
                     _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
                     """);
-            Color.resetAll();
+            Cor.resetAll();
             Util.voltarAoMenu();
         } catch (Exception e) {
-            Color.fontRed();
+            Cor.fontRed();
             System.out.print("Houve um erro ao alterar dados do cliente.");
-            Color.resetAll();
+            Cor.resetAll();
             Util.voltarAoMenu();
         }
     }
@@ -360,11 +360,11 @@ public class ClienteService implements CRUDService<Cliente> {
                 case '5' -> imprimirTodosOsClientes();
                 case '0' -> {}
                 default -> {
-                    Color.fontRed();
+                    Cor.fontRed();
                     System.out.println("""
                         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
                         Opção inválida, digite novamente""");
-                    Color.resetAll();
+                    Cor.resetAll();
                     continua = true;
                 }
             }
@@ -374,22 +374,22 @@ public class ClienteService implements CRUDService<Cliente> {
         List<Cliente> clientes = buscarTodos();
 
         if (clientes.size() != 0) {
-            Color.fontGreen();
+            Cor.fontGreen();
             Util.imprimirLinha();
-            Color.resetAll();
+            Cor.resetAll();
             Util.imprimirCabecalhoCliente();
 
             for (Cliente cliente : clientes) {
                 cliente.imprimirDadosCliente();
             }
-            Color.fontGreen();
+            Cor.fontGreen();
             Util.imprimirLinha();
-            Color.resetAll();
+            Cor.resetAll();
         } else {
             Util.imprimirLinha();
-            Color.fontRed();
+            Cor.fontRed();
             System.out.printf("%96s%n", "NENHUM CLIENTE ENCONTRADO");
-            Color.resetAll();
+            Cor.resetAll();
             Util.imprimirLinha();
         }
         System.out.print("Pressione qualquer tecla para voltar ao menu");
@@ -404,22 +404,22 @@ public class ClienteService implements CRUDService<Cliente> {
         List<Cliente> clientes = clienteRepository.buscarPorNome(nome);
 
         if (clientes.size() != 0) {
-            Color.fontGreen();
+            Cor.fontGreen();
             Util.imprimirLinha();
-            Color.resetAll();
+            Cor.resetAll();
             Util.imprimirCabecalhoCliente();
 
             for (Cliente cliente : clientes) {
                 cliente.imprimirDadosCliente();
             }
-            Color.fontGreen();
+            Cor.fontGreen();
             Util.imprimirLinha();
-            Color.resetAll();
+            Cor.resetAll();
         } else {
             Util.imprimirLinha();
-            Color.fontRed();
+            Cor.fontRed();
             System.out.printf("%96s%n", "NENHUM CLIENTE ENCONTRADO");
-            Color.resetAll();
+            Cor.resetAll();
             Util.imprimirLinha();
         }
         System.out.print("Pressione qualquer tecla para voltar ao menu");

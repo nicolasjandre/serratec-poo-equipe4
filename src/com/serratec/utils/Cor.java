@@ -1,6 +1,6 @@
 package com.serratec.utils;
 
-public class Color {
+public class Cor {
     public static void fontRed() {
         System.out.print("\u001B[31m");
     }

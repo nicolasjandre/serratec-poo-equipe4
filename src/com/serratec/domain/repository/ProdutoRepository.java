@@ -67,7 +67,7 @@ public class ProdutoRepository implements CRUDRepository<Produto> {
         String sql = "delete from " + MainRepository.SCHEMA + ".produto" +
                 " where idproduto = " + idProduto;
 
-        MainRepository.CONEXAO.query(sql);
+        MainRepository.CONEXAO.updateQuery(sql);
     }
 
     @Override
@@ -82,11 +82,12 @@ public class ProdutoRepository implements CRUDRepository<Produto> {
             if (tabela.next()) {
                 produto = new Produto();
 
+                produto.setIdProduto(tabela.getInt("idproduto"));
                 produto.setIdCategoria(tabela.getInt("idcategoria"));
                 produto.setDescricao(tabela.getString("descricao"));
-                produto.setEstoque(tabela.getDouble("dtentrega"));
-                produto.setVlCusto(tabela.getDouble("valortotal"));
-                produto.setVlVenda(tabela.getDouble("observacao"));
+                produto.setEstoque(tabela.getDouble("estoque"));
+                produto.setVlCusto(tabela.getDouble("vlcusto"));
+                produto.setVlVenda(tabela.getDouble("vlvenda"));
             }
 
             tabela.close();
@@ -109,6 +110,7 @@ public class ProdutoRepository implements CRUDRepository<Produto> {
             while (tabela.next()) {
                 var produto = new Produto();
 
+                produto.setIdProduto(tabela.getInt("idproduto"));
                 produto.setIdCategoria(tabela.getInt("idcategoria"));
                 produto.setDescricao(tabela.getString("descricao"));
                 produto.setEstoque(tabela.getDouble("estoque"));
