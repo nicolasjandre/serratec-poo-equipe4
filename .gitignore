@@ -1,5 +1,9 @@
 ### IntelliJ IDEA ###
-.idea
+# Default ignored files
+
+.idea/shelf/
+.idea/workspace.xml
+
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/

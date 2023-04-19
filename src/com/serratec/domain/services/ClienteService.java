@@ -398,7 +398,6 @@ public class ClienteService implements CRUDService<Cliente> {
     public void imprimirClientesPeloNome() {
         String nome;
         ClienteRepository clienteRepository = new ClienteRepository();
-
         System.out.print("Digite o nome do cliente: ");
         nome = Main.input.nextLine();
 
