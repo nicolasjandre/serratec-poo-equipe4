@@ -452,7 +452,7 @@ public class ClienteService implements CRUDService<Cliente> {
     public Cliente buscarClientesPeloId() {
         ClienteRepository clienteRepository = new ClienteRepository();
         var cliente = new Cliente();
-        char opcao = 'R';
+        char opcao;
         int idCliente = 0;
 
         do {
@@ -461,6 +461,8 @@ public class ClienteService implements CRUDService<Cliente> {
             do {
                 try {
                     idCliente = Main.input.nextInt();
+
+                    if (idCliente <= 0) throw new Exception();
                 } catch (Exception e) {
                     Cor.fontRed();
                     System.out.println("O código precisa ser um número inteiro maior que 0");
@@ -468,12 +470,15 @@ public class ClienteService implements CRUDService<Cliente> {
                     System.out.print("Digite novamente: ");
                     Main.input.nextLine();
                 }
-            } while (idCliente == 0);
+            } while (idCliente <= 0);
             Main.input.nextLine();
 
             cliente = clienteRepository.buscarPorId(idCliente);
 
-            if (cliente.getNome() == null || cliente.getNome().isBlank()) continue;
+            if (cliente.getNome() == null || cliente.getNome().isBlank()) {
+                opcao = 'N';
+                continue;
+            }
 
             System.out.println("Deseja escolher o cliente " + cliente.getNome() + "? S/N");
 

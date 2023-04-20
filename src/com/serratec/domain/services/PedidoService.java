@@ -3,9 +3,11 @@ package com.serratec.domain.services;
 import com.serratec.Main;
 import com.serratec.domain.models.Cliente;
 import com.serratec.domain.models.Pedido;
+import com.serratec.domain.models.Produto;
 import com.serratec.domain.repository.PedidoRepository;
 import com.serratec.utils.Cor;
 import com.serratec.utils.Menu;
+import com.serratec.utils.ResultadoBusca;
 import com.serratec.utils.Util;
 
 import java.sql.Date;
@@ -47,15 +49,38 @@ public class PedidoService implements CRUDService<Pedido> {
 
     @Override
     public void cadastrar() {
+        var pedidoRepository = new PedidoRepository();
+        var pedItemService = new PedItemService();
+        var produtoService= new ProdutoService();
+        Double desconto = 0.0;
+
         System.out.printf("%s %n%39s%n %s%n",
                 "_ ".repeat(30), "CADASTRO DE PEDIDO", "_ ".repeat(30));
 
-        var pedidoRepository = new PedidoRepository();
+        System.out.print("Quantos % de desconto deseja incluir no pedido?");
+        do {
+            try {
+                desconto = Main.input.nextDouble();
 
-        Pedido pedido = pedirDadosParaCriarPedido();
+                if (desconto < 0 || desconto > 25) throw new Exception();
+            } catch (Exception e) {
+                Cor.fontRed();
+                System.out.println("O desconto não pode ser maior que 25% ou menor que 0");
+                Cor.resetAll();
+                System.out.print("Digite novamente: ");
+                Main.input.nextLine();
+            }
+        } while (desconto < 0);
+        Main.input.nextLine();
+
+        ResultadoBusca resultadoBusca = pedirDadosParaCriarPedido(desconto);
+        Pedido pedido = resultadoBusca.getPedido();
+        List<Double> qtdVendida = resultadoBusca.getQtdVendida();
 
         try {
             pedidoRepository.incluir(pedido);
+            pedItemService.criarPedItemAposPedido(pedido, desconto, qtdVendida);
+            produtoService.atualizarEstoque(pedido.getProdutos());
             Cor.fontGreen();
             System.out.print("""
                     _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
@@ -72,8 +97,9 @@ public class PedidoService implements CRUDService<Pedido> {
         }
     }
 
-    public Pedido pedirDadosParaCriarPedido() {
+    public ResultadoBusca pedirDadosParaCriarPedido(Double desconto) {
         var clienteService = new ClienteService();
+        var produtoService = new ProdutoService();
         var cliente = new Cliente();
         var pedido = new Pedido();
         boolean continua;
@@ -100,6 +126,28 @@ public class PedidoService implements CRUDService<Pedido> {
                 }
             }
         } while (continua);
+        System.out.println("Cliente " + cliente.getNome() + " adicionado ao pedido.");
+
+        System.out.println("Insira os produtos do seu pedido");
+        ResultadoBusca resultadoBusca = produtoService.buscarProdutosPorIdParaIncluirNoPedido();
+        List<Produto> produtos = resultadoBusca.getProdutos();
+        List<Double> qtdVendida = resultadoBusca.getQtdVendida();
+
+        Double valorTotal;
+        Double valorBruto = 0.0;
+        for (Produto produto : produtos) {
+            int index = produtos.indexOf(produto);
+            valorBruto += qtdVendida.get(index) * produto.getVlVenda();
+        }
+        valorTotal = valorBruto * (1 - desconto / 100);
+
+        Util.imprimirLinha();
+        Util.imprimirCabecalhoProdutoComQtdVendida();
+        for (Produto produto : produtos) {
+            int index = produtos.indexOf(produto);
+            produto.imprimirDadosProdutoComQtdVendida(qtdVendida.get(index));
+        }
+        Util.imprimirLinha();
 
         System.out.print("Digite a data de emissão (dd/MM/yyyy): ");
         Date dtEmissao = Util.pedirData();
@@ -114,8 +162,11 @@ public class PedidoService implements CRUDService<Pedido> {
         pedido.setObervacao(observacao);
         pedido.setDtEmissao(dtEmissao);
         pedido.setDtEntrega(dtEntrega);
-        pedido.setValorTotal(0d);
-        return pedido;
+        pedido.setProdutos(produtos);
+        pedido.setValorBruto(valorBruto);
+        pedido.setValorTotal(valorTotal);
+
+        return new ResultadoBusca(qtdVendida, pedido);
     }
 
     @Override

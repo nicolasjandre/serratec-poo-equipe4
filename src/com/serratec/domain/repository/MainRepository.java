@@ -221,6 +221,8 @@ public class MainRepository {
                     null, null);
             criarCampo(con, entidade, "valortotal", "double precision" , false, false,
                     null, null);
+            criarCampo(con, entidade, "valorbruto", "double precision" , false, false,
+                    null, null);
             criarCampo(con, entidade, "observacao", "varchar(256)" , false, false,
                     null, null);
             criarCampo(con, entidade, "idcliente", "integer" , false, true, SCHEMA+".cliente", "idcliente");

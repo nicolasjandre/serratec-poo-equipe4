@@ -6,21 +6,24 @@ import com.serratec.domain.models.Produto;
 import com.serratec.domain.repository.PedItemRepository;
 import com.serratec.domain.repository.PedidoRepository;
 
+import java.util.List;
+
 public class PedItemService {
 
-    public void criarPedItemAposPedido(Pedido pedido) {
+    public void criarPedItemAposPedido(Pedido pedido, Double desconto, List<Double> qtdVendida) {
         var pedidoRepository = new PedidoRepository();
+        var pedItemRepository = new PedItemRepository();
         var ultimoPedido = pedidoRepository.buscarUltimoPedidoCriado();
 
         for (Produto produto : pedido.getProdutos()) {
-            var pedItemRepository = new PedItemRepository();
             var pedItem = new PedItem();
+            int index = pedido.getProdutos().indexOf(produto);
 
             pedItem.setPedido(ultimoPedido);
             pedItem.setProduto(produto);
             pedItem.setVlUnitario(produto.getVlVenda());
-            pedItem.setVlDesconto(pedido.getDesconto());
-            pedItem.setQuantidade(produto.getQtdVendida());
+            pedItem.setVlDesconto(desconto);
+            pedItem.setQuantidade(qtdVendida.get(index));
 
             pedItemRepository.incluir(pedItem);
         }

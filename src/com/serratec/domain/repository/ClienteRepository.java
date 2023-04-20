@@ -107,7 +107,7 @@ public class ClienteRepository implements CRUDRepository<Cliente> {
                 cliente.setEndereco(tabela.getString("endereco"));
                 cliente.setTelefone(tabela.getString("telefone"));
             } else
-                System.out.println("Cliente com o CPF: [" + cpf + "] não localizado.");
+                System.err.println("Cliente com o CPF: [" + cpf + "] não localizado.");
 
             tabela.close();
         } catch (Exception e) {

@@ -7,11 +7,16 @@ public class Produto {
     private Double estoque;
     private Double vlCusto;
     private Double vlVenda;
-    private double qtdVendida;
 
     public void imprimirDadosProduto() {
         System.out.printf("%-13s %-35s %-20s %-30s %-70s %s\n",
                 getIdProduto(), getDescricao(), getIdCategoria(), getEstoque(), getVlCusto(), getVlVenda());
+    }
+
+    public void imprimirDadosProdutoComQtdVendida(Double qtdVendida) {
+        System.out.printf("%-13s %-35s %-20s %-30s %-30s %-30s %s\n",
+                getIdProduto(), getDescricao(), getIdCategoria(), getEstoque(),
+                getVlCusto(), getVlVenda(), qtdVendida);
     }
 
     public int getIdProduto() {
@@ -52,14 +57,6 @@ public class Produto {
 
     public void setVlVenda(Double vlVenda) {
         this.vlVenda = vlVenda;
-    }
-
-    public double getQtdVendida() {
-        return qtdVendida;
-    }
-
-    public void setQtdVendida(double qtdVendida) {
-        this.qtdVendida = qtdVendida;
     }
 
     public Double getEstoque() {

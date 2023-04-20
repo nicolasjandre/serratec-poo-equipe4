@@ -62,6 +62,14 @@ public class ProdutoRepository implements CRUDRepository<Produto> {
         MainRepository.CONEXAO.updateQuery(sql);
     }
 
+    public void atualizarEstoque(Produto produto) {
+        String sql = "update " +
+                MainRepository.SCHEMA + ".produto set " +
+                "estoque = '" + produto.getEstoque() + "'" +
+                "where idproduto = " + produto.getIdProduto();
+        MainRepository.CONEXAO.updateQuery(sql);
+    }
+
     @Override
     public void apagarPorId(int idProduto) {
         String sql = "delete from " + MainRepository.SCHEMA + ".produto" +
