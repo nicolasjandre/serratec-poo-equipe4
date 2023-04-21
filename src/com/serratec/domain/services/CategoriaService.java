@@ -60,7 +60,7 @@ public class CategoriaService {
 
                 categoria = categoriaDAO.buscarPorId(idCategoria);
 
-                if (categoria.getDescricao() == null || categoria.getDescricao().isBlank()) continue;
+                if (categoria == null || categoria.getDescricao() == null || categoria.getDescricao().isBlank()) continue;
 
                 System.out.println("Deseja escolher a categoria " + categoria.getDescricao() + "? S/N");
 

@@ -418,7 +418,7 @@ public class ProdutoService implements CRUDService<Produto>{
 
             produto = produtoDAO.buscarPorId(idProduto);
 
-            if (produto.getDescricao() == null || produto.getDescricao().isBlank()) continue;
+            if (produto == null || produto.getDescricao() == null || produto.getDescricao().isBlank()) continue;
 
             System.out.println("Deseja escolher o produto " + produto.getDescricao() + "? S/N");
 
@@ -500,7 +500,7 @@ public class ProdutoService implements CRUDService<Produto>{
 
             produto = produtoDAO.buscarPorId(idProduto);
 
-            if (produto.getDescricao() == null || produto.getDescricao().isBlank()) continue;
+            if (produto == null || produto.getDescricao() == null || produto.getDescricao().isBlank()) continue;
 
             System.out.print("Quantos " + produto.getDescricao() + " deseja inserir no pedido?");
             do {

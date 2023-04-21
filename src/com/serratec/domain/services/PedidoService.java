@@ -191,7 +191,8 @@ public class PedidoService implements CRUDService<Pedido> {
 
                 pedido = pedidoDAO.buscarPorId(idPedido);
 
-                if (pedido.getCliente().getNome() == null || pedido.getCliente().getNome().isEmpty()) {
+                if (pedido == null || pedido.getCliente() == null ||
+                        pedido.getCliente().getNome() == null || pedido.getCliente().getNome().isEmpty()) {
                     throw new NullPointerException();
                 }
 
@@ -452,7 +453,7 @@ public class PedidoService implements CRUDService<Pedido> {
 
                 produto = produtoDAO.buscarPorId(codProduto);
 
-                if (produto.getDescricao() == null || produto.getDescricao().isBlank()) throw new Exception();
+                if (produto == null || produto.getDescricao() == null || produto.getDescricao().isBlank()) throw new Exception();
 
                 for (Produto prodPed : pedido.getProdutos()) {
 
@@ -575,7 +576,7 @@ public class PedidoService implements CRUDService<Pedido> {
 
                 produto = produtoDAO.buscarPorId(codProduto);
 
-                if (produto.getDescricao() == null || produto.getDescricao().isBlank()) throw new Exception();
+                if (produto == null || produto.getDescricao() == null || produto.getDescricao().isBlank()) throw new Exception();
 
                 for (Produto prodPed : pedido.getProdutos()) {
 
@@ -606,7 +607,7 @@ public class PedidoService implements CRUDService<Pedido> {
 
                 novoProduto = produtoDAO.buscarPorId(codProduto);
 
-                if (produto.getDescricao() == null || produto.getDescricao().isBlank()) throw new Exception();
+                if (produto == null || produto.getDescricao() == null || produto.getDescricao().isBlank()) throw new Exception();
 
                 if (produto.getIdProduto() == novoProduto.getIdProduto()) {
                     Cor.fontRed();
@@ -828,7 +829,7 @@ public class PedidoService implements CRUDService<Pedido> {
 
                 produto = produtoDAO.buscarPorId(codProduto);
 
-                if (produto.getDescricao() == null || produto.getDescricao().isBlank()) throw new Exception();
+                if (produto == null || produto.getDescricao() == null || produto.getDescricao().isBlank()) throw new Exception();
 
                 for (Produto prodPed : pedido.getProdutos()) {
 
@@ -881,13 +882,13 @@ public class PedidoService implements CRUDService<Pedido> {
         var pedidoDAO = new PedidoDAO();
         var pedItemService = new PedItemService();
 
-        if (pedido.getCliente() == null || pedido.getCliente().getNome() == null
+        if (pedido == null ||pedido.getCliente() == null || pedido.getCliente().getNome() == null
                 || pedido.getCliente().getNome().isBlank()) {
             Cor.fontRed();
             System.out.println("Você precisa inserir um cliente para salvar o pedido.");
             Cor.resetAll();
             return;
-        } else if (pedido.getProdutos() == null
+        } else if (pedido == null || pedido.getProdutos() == null
                 || pedido.getProdutos().size() == 0) {
             Cor.fontRed();
             System.out.println("Você precisa inserir ao menos um produto para salvar o pedido.");

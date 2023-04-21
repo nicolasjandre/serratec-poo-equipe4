@@ -374,7 +374,7 @@ public class ClienteService implements CRUDService<Cliente> {
 
             cliente = clienteDAO.buscarPorCpf(cpf);
 
-            if (cliente.getNome() == null || cliente.getNome().isBlank()) continue;
+            if (cliente == null || cliente.getNome() == null || cliente.getNome().isBlank()) continue;
 
             System.out.println("Deseja escolher o cliente " + cliente.getNome() + "? S/N");
 
@@ -480,7 +480,7 @@ public class ClienteService implements CRUDService<Cliente> {
 
             cliente = clienteDAO.buscarPorId(idCliente);
 
-            if (cliente.getNome() == null || cliente.getNome().isBlank()) {
+            if (cliente == null || cliente.getNome() == null || cliente.getNome().isBlank()) {
                 opcao = 'N';
                 continue;
             }
