@@ -1,4 +1,4 @@
-package com.serratec.domain.repository;
+package com.serratec.domain.DAO;
 
 import com.serratec.files.ArquivoTxt;
 import com.serratec.settings.Conexao;
@@ -9,7 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-public class MainRepository {
+public class CreateDAO {
     private static final String PATH = "/home/nicolas/";
     private static final String SFILE = "DadosConexao.ini";
     private static final String BD = "equipe4trabalhofinalpoo";
@@ -330,7 +330,7 @@ public class MainRepository {
         }
 
         if (abrirSistema) {
-            if (MainRepository.createBD(dadoCon)) {
+            if (CreateDAO.createBD(dadoCon)) {
                 Util.imprimirSistemaIniciado();
             } else {
                 System.err.println("Houve um problema na criação do banco de dados.");

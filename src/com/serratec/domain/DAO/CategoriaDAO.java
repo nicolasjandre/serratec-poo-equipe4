@@ -1,4 +1,4 @@
-package com.serratec.domain.repository;
+package com.serratec.domain.DAO;
 
 import com.serratec.domain.models.Categoria;
 
@@ -8,21 +8,21 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoriaRepository {
+public class CategoriaDAO {
     PreparedStatement pInclusao = null;
 
-    public CategoriaRepository() {
+    public CategoriaDAO() {
         prepararSqlInclusao();
     }
 
     private void prepararSqlInclusao() {
-        String sql = "insert into "+ MainRepository.SCHEMA + ".categoria";
+        String sql = "insert into "+ CreateDAO.SCHEMA + ".categoria";
         sql += " (descricao)";
         sql += " values ";
         sql += " (?)";
 
         try {
-            pInclusao =  MainRepository.CONEXAO.getC().prepareStatement(sql);
+            pInclusao =  CreateDAO.CONEXAO.getC().prepareStatement(sql);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -47,9 +47,9 @@ public class CategoriaRepository {
         var categoria = new Categoria();
         ResultSet tabela;
 
-        String sql = "select * from " + MainRepository.SCHEMA + ".categoria where idcategoria = " + idCategoria;
+        String sql = "select * from " + CreateDAO.SCHEMA + ".categoria where idcategoria = " + idCategoria;
 
-        tabela = MainRepository.CONEXAO.query(sql);
+        tabela = CreateDAO.CONEXAO.query(sql);
 
         try {
             if (tabela.next()) {
@@ -68,10 +68,10 @@ public class CategoriaRepository {
 
     public List<Categoria> buscarTodos() {
         List<Categoria> categorias = new ArrayList<>();
-        String sql = "select * from " + MainRepository.SCHEMA + ".categoria order by idcategoria";
+        String sql = "select * from " + CreateDAO.SCHEMA + ".categoria order by idcategoria";
         ResultSet tabela;
 
-        tabela = MainRepository.CONEXAO.query(sql);
+        tabela = CreateDAO.CONEXAO.query(sql);
 
         try {
             while (tabela.next()) {

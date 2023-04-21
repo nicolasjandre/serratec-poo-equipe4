@@ -1,8 +1,8 @@
-package com.serratec.domain.repository;
+package com.serratec.domain.DAO;
 
 import java.util.List;
 
-public interface CRUDRepository<T> {
+public interface CrudDAO<T> {
     void prepararSqlInclusao();
     void incluir(T t);
     void alterar(T t);
