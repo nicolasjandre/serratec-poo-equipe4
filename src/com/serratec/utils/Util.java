@@ -89,8 +89,19 @@ public class Util {
         imprimirLinha();
         Cor.resetAll();
         Cor.fontBlue();
-        System.out.printf("%104s %n%110s %n", "SISTEMA INICIADO",
+        System.out.printf("%103s %n%110s %n", "SISTEMA INICIADO",
                 "BEM VINDO AO SERRA CONSTRUÇÕES" );
+        Cor.resetAll();
+        Cor.backgroundGrey();
+        imprimirLinha();
+        Cor.resetAll();
+        System.out.printf("%107s %n%108s %n%108s %n%112s %n%107s %n%106s%n",
+                "Nícolas Jandre De Faria",
+                "Sophia Resende De Freitas",
+                "Thallyson da Silva Antonio",
+                "Rodrigo De Brites Sobrinho Lisbôa",
+                "Arthur Barroso Barbosa",
+                "Gabriel Rezende Maia");
         Cor.resetAll();
         Cor.backgroundGrey();
         imprimirLinha();
