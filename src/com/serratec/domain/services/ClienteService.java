@@ -2,7 +2,7 @@ package com.serratec.domain.services;
 
 import com.serratec.Main;
 import com.serratec.domain.models.Cliente;
-import com.serratec.domain.repository.ClienteRepository;
+import com.serratec.domain.DAO.ClienteDAO;
 import com.serratec.utils.Cor;
 import com.serratec.utils.Menu;
 import com.serratec.utils.Util;
@@ -20,12 +20,12 @@ public class ClienteService implements CRUDService<Cliente> {
         System.out.printf("%s %n%39s%n %s%n",
                 "_ ".repeat(30), "CADASTRO DE CLIENTE", "_ ".repeat(30));
 
-        var clienteRepository = new ClienteRepository();
+        var clienteDAO = new ClienteDAO();
 
         Cliente cliente = pedirDadosParaCriarCliente();
 
         try {
-            clienteRepository.incluir(cliente);
+            clienteDAO.incluir(cliente);
             Cor.fontGreen();
             System.out.print("""
                     _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
@@ -162,7 +162,7 @@ public class ClienteService implements CRUDService<Cliente> {
     public void apagar() {
         int idCliente = 0;
         boolean continua;
-        var clienteRepository = new ClienteRepository();
+        var clienteDAO = new ClienteDAO();
 
         System.out.print("Digite o código do cliente: ");
 
@@ -171,7 +171,7 @@ public class ClienteService implements CRUDService<Cliente> {
             try {
                 idCliente = Main.input.nextInt();
 
-                Cliente cliente = clienteRepository.buscarPorId(idCliente);
+                Cliente cliente = clienteDAO.buscarPorId(idCliente);
 
                 if (cliente.getNome().isEmpty()) {
                     throw new NullPointerException();
@@ -188,7 +188,7 @@ public class ClienteService implements CRUDService<Cliente> {
             }
         } while (continua);
 
-        clienteRepository.apagarPorId(idCliente);
+        clienteDAO.apagarPorId(idCliente);
         Main.input.nextLine();
     }
     @Override
@@ -196,7 +196,7 @@ public class ClienteService implements CRUDService<Cliente> {
         var clienteQueSeraAlterado = new Cliente();
         int idCliente;
         boolean continua;
-        var clienteRepository = new ClienteRepository();
+        var clienteDAO = new ClienteDAO();
 
         System.out.print("Digite o código do cliente: ");
 
@@ -205,7 +205,7 @@ public class ClienteService implements CRUDService<Cliente> {
             try {
                 idCliente = Main.input.nextInt();
 
-                clienteQueSeraAlterado = clienteRepository.buscarPorId(idCliente);
+                clienteQueSeraAlterado = clienteDAO.buscarPorId(idCliente);
 
                 if (clienteQueSeraAlterado.getNome().isEmpty()) {
                     throw new NullPointerException();
@@ -236,7 +236,7 @@ public class ClienteService implements CRUDService<Cliente> {
         clienteQueSeraAlterado.setNome(clienteNovo.getNome());
 
         try {
-            clienteRepository.alterar(clienteQueSeraAlterado);
+            clienteDAO.alterar(clienteQueSeraAlterado);
 
             Cor.fontGreen();
             System.out.print("""
@@ -255,8 +255,8 @@ public class ClienteService implements CRUDService<Cliente> {
     }
     @Override
     public List<Cliente> buscarTodos() {
-        var clienteRepository = new ClienteRepository();
-        return clienteRepository.buscarTodos();
+        var clienteDAO = new ClienteDAO();
+        return clienteDAO.buscarTodos();
     }
     public void menuCliente() {
         String s;
@@ -315,11 +315,11 @@ public class ClienteService implements CRUDService<Cliente> {
     }
     public void imprimirClientesPeloNome() {
         String nome;
-        ClienteRepository clienteRepository = new ClienteRepository();
+        ClienteDAO clienteDAO = new ClienteDAO();
         System.out.print("Digite o nome do cliente: ");
         nome = Main.input.nextLine();
 
-        List<Cliente> clientes = clienteRepository.buscarPorNome(nome);
+        List<Cliente> clientes = clienteDAO.buscarPorNome(nome);
 
         if (clientes.size() != 0) {
             Cor.fontGreen();
@@ -344,7 +344,7 @@ public class ClienteService implements CRUDService<Cliente> {
         Main.input.nextLine();
     }
     public Cliente buscarClientePorCpf() {
-        ClienteRepository clienteRepository = new ClienteRepository();
+        ClienteDAO clienteDAO = new ClienteDAO();
         String cpf = "A";
         char opcao = 'R';
         boolean continua;
@@ -372,7 +372,7 @@ public class ClienteService implements CRUDService<Cliente> {
                 }
             } while (continua);
 
-            cliente = clienteRepository.buscarPorCpf(cpf);
+            cliente = clienteDAO.buscarPorCpf(cpf);
 
             if (cliente.getNome() == null || cliente.getNome().isBlank()) continue;
 
@@ -396,7 +396,7 @@ public class ClienteService implements CRUDService<Cliente> {
         return cliente;
     }
     public Cliente buscarClientePeloNome() {
-        ClienteRepository clienteRepository = new ClienteRepository();
+        ClienteDAO clienteDAO = new ClienteDAO();
         List<Cliente> clientes;
         var cliente = new Cliente();
         String nome;
@@ -407,7 +407,7 @@ public class ClienteService implements CRUDService<Cliente> {
                 System.out.print("Digite o nome do cliente: ");
                 nome = Main.input.nextLine();
 
-                clientes = clienteRepository.buscarPorNome(nome);
+                clientes = clienteDAO.buscarPorNome(nome);
 
                 if (clientes.size() != 0) {
                     Cor.fontGreen();
@@ -455,7 +455,7 @@ public class ClienteService implements CRUDService<Cliente> {
         return cliente;
     }
     public Cliente buscarClientesPeloId() {
-        ClienteRepository clienteRepository = new ClienteRepository();
+        ClienteDAO clienteDAO = new ClienteDAO();
         var cliente = new Cliente();
         char opcao;
         int idCliente = 0;
@@ -478,7 +478,7 @@ public class ClienteService implements CRUDService<Cliente> {
             } while (idCliente <= 0);
             Main.input.nextLine();
 
-            cliente = clienteRepository.buscarPorId(idCliente);
+            cliente = clienteDAO.buscarPorId(idCliente);
 
             if (cliente.getNome() == null || cliente.getNome().isBlank()) {
                 opcao = 'N';
@@ -505,8 +505,8 @@ public class ClienteService implements CRUDService<Cliente> {
         return cliente;
     }
     public void criarClientesIniciais() {
-        var clienteRepository = new ClienteRepository();
-        List<Cliente> clientes = clienteRepository.buscarTodos();
+        var clienteDAO = new ClienteDAO();
+        List<Cliente> clientes = clienteDAO.buscarTodos();
         var cliente = new Cliente();
 
         if (clientes.size() == 0) {
@@ -515,35 +515,35 @@ public class ClienteService implements CRUDService<Cliente> {
             cliente.setDtNascimento(Date.valueOf("1976-03-05"));
             cliente.setEndereco("Estrada do Calembe, 234, Granja Florestal, Teresópolis RJ");
             cliente.setTelefone("(21)997654321");
-            clienteRepository.incluir(cliente);
+            clienteDAO.incluir(cliente);
 
             cliente.setCpf("98765432102");
             cliente.setNome("Pedro Alves");
             cliente.setDtNascimento(Date.valueOf("1990-08-20"));
             cliente.setEndereco("Rua Nova Friburgo, 567, Olaria, Nova Friburgo RJ");
             cliente.setTelefone("(22)998765432");
-            clienteRepository.incluir(cliente);
+            clienteDAO.incluir(cliente);
 
             cliente.setCpf("12345678903");
             cliente.setNome("Maria da Silva");
             cliente.setDtNascimento(Date.valueOf("1985-05-10"));
             cliente.setEndereco("Rua João da Cunha, 123, Várzea, Teresópolis RJ");
             cliente.setTelefone("(21)987654321");
-            clienteRepository.incluir(cliente);
+            clienteDAO.incluir(cliente);
 
             cliente.setCpf("23456789004");
             cliente.setNome("João dos Santos");
             cliente.setDtNascimento(Date.valueOf("1998-09-20"));
             cliente.setEndereco("Rua Manuel José Lebrão, 789, Agriões, Teresópolis RJ");
             cliente.setTelefone("(21)987654321");
-            clienteRepository.incluir(cliente);
+            clienteDAO.incluir(cliente);
 
             cliente.setCpf("45678912305");
             cliente.setNome("Carlos Pereira");
             cliente.setDtNascimento(Date.valueOf("1976-03-05"));
             cliente.setEndereco("Estrada dos Pássaros, 234, Granja Florestal, Teresópolis RJ");
             cliente.setTelefone("(21)997654321");
-            clienteRepository.incluir(cliente);
+            clienteDAO.incluir(cliente);
         }
     }
 }

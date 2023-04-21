@@ -2,7 +2,7 @@ package com.serratec.domain.services;
 
 import com.serratec.Main;
 import com.serratec.domain.models.Produto;
-import com.serratec.domain.repository.ProdutoRepository;
+import com.serratec.domain.DAO.ProdutoDAO;
 import com.serratec.utils.Cor;
 import com.serratec.utils.Menu;
 import com.serratec.utils.ResultadoBusca;
@@ -51,7 +51,7 @@ public class ProdutoService implements CRUDService<Produto>{
 
         var produto = new Produto();
         boolean continua;
-        var produtoRepository = new ProdutoRepository();
+        var produtoDAO = new ProdutoDAO();
 
         System.out.print("Digite a descrição do produto: ");
         String descricao = null;
@@ -146,7 +146,7 @@ public class ProdutoService implements CRUDService<Produto>{
 
 
         try {
-            produtoRepository.incluir(produto);
+            produtoDAO.incluir(produto);
             Cor.fontGreen();
             System.out.print("""
                     _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
@@ -168,7 +168,7 @@ public class ProdutoService implements CRUDService<Produto>{
 
         int idProduto = 0;
         boolean continua;
-        var produtoRepository = new ProdutoRepository();
+        var produtoDAO = new ProdutoDAO();
 
         System.out.print("Digite o código do produto: ");
 
@@ -177,7 +177,7 @@ public class ProdutoService implements CRUDService<Produto>{
             try {
                 idProduto = Main.input.nextInt();
 
-                Produto produto = produtoRepository.buscarPorId(idProduto);
+                Produto produto = produtoDAO.buscarPorId(idProduto);
 
                 if (produto.getDescricao().isEmpty()) {
                     throw new NullPointerException();
@@ -194,7 +194,7 @@ public class ProdutoService implements CRUDService<Produto>{
             }
         } while (continua);
 
-        produtoRepository.apagarPorId(idProduto);
+        produtoDAO.apagarPorId(idProduto);
         Main.input.nextLine();
     }
 
@@ -203,7 +203,7 @@ public class ProdutoService implements CRUDService<Produto>{
 
         var produto = new Produto();
         boolean continua;
-        var produtoRepository = new ProdutoRepository();
+        var produtoDAO = new ProdutoDAO();
 
        produto = buscarPorId();
 
@@ -296,7 +296,7 @@ public class ProdutoService implements CRUDService<Produto>{
         produto.setIdCategoria(categoria.getIdCategoria());
 
         try {
-            produtoRepository.alterar(produto);
+            produtoDAO.alterar(produto);
             Cor.fontGreen();
             System.out.print("""
                     _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
@@ -316,8 +316,8 @@ public class ProdutoService implements CRUDService<Produto>{
 
     @Override
     public List<Produto> buscarTodos() {
-        var produtoRepository = new ProdutoRepository();
-        return produtoRepository.buscarTodos();
+        var produtoDAO = new ProdutoDAO();
+        return produtoDAO.buscarTodos();
     }
 
     public void imprimirTodosOsProdutos() {
@@ -347,8 +347,8 @@ public class ProdutoService implements CRUDService<Produto>{
     }
 
     public void criarProdutosIniciais() {
-        var produtoRepository = new ProdutoRepository();
-        List<Produto> produtos = produtoRepository.buscarTodos();
+        var produtoDAO = new ProdutoDAO();
+        List<Produto> produtos = produtoDAO.buscarTodos();
         var produto = new Produto();
 
         if (produtos.size() == 0) {
@@ -357,41 +357,41 @@ public class ProdutoService implements CRUDService<Produto>{
             produto.setVlVenda(250.00);
             produto.setVlCusto(180.00);
             produto.setIdCategoria(1);
-            produtoRepository.incluir(produto);
+            produtoDAO.incluir(produto);
 
             produto.setDescricao("Porcelanato Bege 60x60cm");
             produto.setEstoque(50D);
             produto.setVlVenda(89.90);
             produto.setVlCusto(75.00);
             produto.setIdCategoria(2);
-            produtoRepository.incluir(produto);
+            produtoDAO.incluir(produto);
 
             produto.setDescricao("Argamassa AC III 20kg");
             produto.setEstoque(100D);
             produto.setVlVenda(24.90);
             produto.setVlCusto(18.50);
             produto.setIdCategoria(3);
-            produtoRepository.incluir(produto);
+            produtoDAO.incluir(produto);
 
             produto.setDescricao("Torneira para cozinha com filtro");
             produto.setEstoque(30D);
             produto.setVlVenda(189.90);
             produto.setVlCusto(120.00);
             produto.setIdCategoria(4);
-            produtoRepository.incluir(produto);
+            produtoDAO.incluir(produto);
 
             produto.setDescricao("Chuveiro elétrico 220v 7500W");
             produto.setEstoque(40D);
             produto.setVlVenda(74.90);
             produto.setVlCusto(50.00);
             produto.setIdCategoria(5);
-            produtoRepository.incluir(produto);
+            produtoDAO.incluir(produto);
         }
     }
 
     public Produto buscarPorId() {
 
-        var produtoRepository = new ProdutoRepository();
+        var produtoDAO = new ProdutoDAO();
         int idProduto = 0;
         char opcao = 'R';
         boolean continua;
@@ -416,7 +416,7 @@ public class ProdutoService implements CRUDService<Produto>{
 
             Main.input.nextLine();
 
-            produto = produtoRepository.buscarPorId(idProduto);
+            produto = produtoDAO.buscarPorId(idProduto);
 
             if (produto.getDescricao() == null || produto.getDescricao().isBlank()) continue;
 
@@ -442,7 +442,7 @@ public class ProdutoService implements CRUDService<Produto>{
     }
 
     public ResultadoBusca buscarProdutosPorIdParaIncluirNoPedido() {
-        ProdutoRepository produtoRepository = new ProdutoRepository();
+        ProdutoDAO produtoDAO = new ProdutoDAO();
         List<Produto> produtos = new ArrayList<>();
         List<Double> qtdVendidaProduto = new ArrayList<>();
         var produto = new Produto();
@@ -498,7 +498,7 @@ public class ProdutoService implements CRUDService<Produto>{
             } while (idProduto <= 0);
             Main.input.nextLine();
 
-            produto = produtoRepository.buscarPorId(idProduto);
+            produto = produtoDAO.buscarPorId(idProduto);
 
             if (produto.getDescricao() == null || produto.getDescricao().isBlank()) continue;
 
@@ -589,10 +589,10 @@ public class ProdutoService implements CRUDService<Produto>{
         return new ResultadoBusca(produtos, qtdVendidaProduto);
     }
     public void atualizarEstoque(List<Produto> produtos) {
-        var produtoRepository = new ProdutoRepository();
+        var produtoDAO = new ProdutoDAO();
 
         for (var produto : produtos) {
-            produtoRepository.atualizarEstoque(produto);
+            produtoDAO.atualizarEstoque(produto);
         }
     }
 }

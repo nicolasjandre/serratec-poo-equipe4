@@ -1,6 +1,6 @@
 package com.serratec;
 
-import com.serratec.domain.repository.MainRepository;
+import com.serratec.domain.DAO.CreateDAO;
 import com.serratec.domain.services.*;
 import com.serratec.utils.Menu;
 
@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class Main {
     public static Scanner input = new Scanner(System.in);
     public static void main(String[] args) {
-        MainRepository.iniciarConexaoComBanco();
+        CreateDAO.iniciarConexaoComBanco();
 
         var clienteService = new ClienteService();
         var produtoService = new ProdutoService();

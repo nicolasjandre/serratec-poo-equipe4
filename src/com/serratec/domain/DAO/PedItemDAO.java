@@ -1,4 +1,4 @@
-package com.serratec.domain.repository;
+package com.serratec.domain.DAO;
 
 import com.serratec.domain.models.PedItem;
 import com.serratec.domain.models.Pedido;
@@ -10,22 +10,22 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PedItemRepository implements CRUDRepository<PedItem> {
+public class PedItemDAO implements CrudDAO<PedItem> {
     PreparedStatement pInclusao = null;
 
-    public PedItemRepository() {
+    public PedItemDAO() {
         prepararSqlInclusao();
     }
 
     @Override
     public void prepararSqlInclusao() {
-        String sql = "insert into " + MainRepository.SCHEMA + ".peditem";
+        String sql = "insert into " + CreateDAO.SCHEMA + ".peditem";
         sql += " (idpedido, idproduto, vlunitario, vldesconto, quantidade)";
         sql += " values ";
         sql += " (?, ?, ?, ?, ?)";
 
         try {
-            pInclusao = MainRepository.CONEXAO.getC().prepareStatement(sql);
+            pInclusao = CreateDAO.CONEXAO.getC().prepareStatement(sql);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -53,13 +53,13 @@ public class PedItemRepository implements CRUDRepository<PedItem> {
     public List<PedItem> buscarPedItemsPorIdPedido(int idPedido) {
         List<PedItem> pedItems = new ArrayList<>();
 
-        String sql = "SELECT * FROM " + MainRepository.SCHEMA + ".peditem ";
-        sql += "LEFT JOIN " + MainRepository.SCHEMA + ".pedido ON pedido.idpedido = ";
+        String sql = "SELECT * FROM " + CreateDAO.SCHEMA + ".peditem ";
+        sql += "LEFT JOIN " + CreateDAO.SCHEMA + ".pedido ON pedido.idpedido = ";
         sql += "peditem.idpedido WHERE peditem.idpedido = " + idPedido + " and pedido.idpedido = " + idPedido;
 
         ResultSet tabela;
 
-        tabela = MainRepository.CONEXAO.query(sql);
+        tabela = CreateDAO.CONEXAO.query(sql);
 
         try {
             while (tabela.next()) {
@@ -95,31 +95,31 @@ public class PedItemRepository implements CRUDRepository<PedItem> {
     @Override
     public void alterar(PedItem pedItem) {
         String sql = "update " +
-                MainRepository.SCHEMA + ".peditem set " +
+                CreateDAO.SCHEMA + ".peditem set " +
                 "idpedido = '" + pedItem.getPedido().getIdPedido() + "'" +
                 ", idproduto = '" + pedItem.getProduto().getIdProduto() + "'" +
                 ", vlunitario = '" + pedItem.getVlUnitario() + "'" +
                 ", vldesconto = '" + pedItem.getVlDesconto() + "' " +
                 ", quantidade = '" + pedItem.getQuantidade() + "' " +
                 "where idpeditem = " + pedItem.getIdPedItem();
-        MainRepository.CONEXAO.updateQuery(sql);
+        CreateDAO.CONEXAO.updateQuery(sql);
     }
 
     @Override
     public void apagarPorId(int idPedItem) {
-        String sql = "delete from " + MainRepository.SCHEMA + ".peditem" +
+        String sql = "delete from " + CreateDAO.SCHEMA + ".peditem" +
                 " where idpeditem = " + idPedItem;
 
-        MainRepository.CONEXAO.updateQuery(sql);
+        CreateDAO.CONEXAO.updateQuery(sql);
     }
 
     @Override
     public PedItem buscarPorId(int idPedItem) {
         PedItem pedItem = new PedItem();
-        String sql = "SELECT * FROM " + MainRepository.SCHEMA + ".peditem WHERE idpeditem = " + idPedItem;
+        String sql = "SELECT * FROM " + CreateDAO.SCHEMA + ".peditem WHERE idpeditem = " + idPedItem;
         ResultSet tabela;
 
-        tabela = MainRepository.CONEXAO.query(sql);
+        tabela = CreateDAO.CONEXAO.query(sql);
 
         try {
             if (tabela.next()) {
@@ -148,14 +148,14 @@ public class PedItemRepository implements CRUDRepository<PedItem> {
     @Override
     public List<PedItem> buscarTodos() {
         List<PedItem> pedItems = new ArrayList<>();
-        String sql = "select * from " + MainRepository.SCHEMA + ".peditem order by peditem";
+        String sql = "select * from " + CreateDAO.SCHEMA + ".peditem order by peditem";
         ResultSet tabela;
 
-        tabela = MainRepository.CONEXAO.query(sql);
+        tabela = CreateDAO.CONEXAO.query(sql);
 
         try {
             while (tabela.next()) {
-                var pedidoRepository = new PedidoRepository();
+                var pedidoRepository = new PedidoDAO();
                 var produto = new Produto();
                 var pedido = pedidoRepository.buscarPorId(tabela.getInt("idpedido"));
 

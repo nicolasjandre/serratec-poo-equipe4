@@ -1,4 +1,4 @@
-package com.serratec.domain.repository;
+package com.serratec.domain.DAO;
 
 import com.serratec.domain.models.Cliente;
 import com.serratec.domain.models.Pedido;
@@ -9,21 +9,21 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PedidoRepository implements CRUDRepository <Pedido>{
+public class PedidoDAO implements CrudDAO<Pedido> {
     PreparedStatement pInclusao = null;
-    public PedidoRepository() {
+    public PedidoDAO() {
         prepararSqlInclusao();
     }
 
     @Override
     public void prepararSqlInclusao() {
-        String sql = "insert into " + MainRepository.SCHEMA + ".pedido";
+        String sql = "insert into " + CreateDAO.SCHEMA + ".pedido";
         sql += " (dtemissao, dtentrega, valortotal, valorbruto, observacao, idcliente)";
         sql += " values ";
         sql += " (?, ?, ?, ?, ?, ?)";
 
         try {
-            pInclusao = MainRepository.CONEXAO.getC().prepareStatement(sql);
+            pInclusao = CreateDAO.CONEXAO.getC().prepareStatement(sql);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -53,7 +53,7 @@ public class PedidoRepository implements CRUDRepository <Pedido>{
     @Override
     public void alterar(Pedido pedido) {
         String sql = "update " +
-                MainRepository.SCHEMA + ".pedido set " +
+                CreateDAO.SCHEMA + ".pedido set " +
                 "dtemissao = '" + pedido.getDtEmissao() + "'" +
                 ", dtentrega = '" + pedido.getDtEntrega() + "'" +
                 ", valortotal = '" + pedido.getValorTotal() + "'" +
@@ -61,24 +61,24 @@ public class PedidoRepository implements CRUDRepository <Pedido>{
                 ", observacao = '" + pedido.getObervacao() + "' " +
                 ", idcliente = '" + pedido.getCliente().getIdCliente() + "' " +
                 "where idpedido = " + pedido.getIdPedido();
-        MainRepository.CONEXAO.updateQuery(sql);
+        CreateDAO.CONEXAO.updateQuery(sql);
     }
 
     @Override
     public void apagarPorId(int idPedido) {
-        String sql = "delete from " + MainRepository.SCHEMA + ".pedido" +
+        String sql = "delete from " + CreateDAO.SCHEMA + ".pedido" +
                 " where idpedido = " + idPedido;
 
-        MainRepository.CONEXAO.updateQuery(sql);
+        CreateDAO.CONEXAO.updateQuery(sql);
     }
 
     @Override
     public Pedido buscarPorId(int idPedido) {
         Pedido pedido = null;
-        String sql = "SELECT * FROM " + MainRepository.SCHEMA + ".pedido WHERE idpedido = " + idPedido;
+        String sql = "SELECT * FROM " + CreateDAO.SCHEMA + ".pedido WHERE idpedido = " + idPedido;
         ResultSet tabela;
 
-        tabela = MainRepository.CONEXAO.query(sql);
+        tabela = CreateDAO.CONEXAO.query(sql);
 
         try {
             if (tabela.next()) {
@@ -91,7 +91,7 @@ public class PedidoRepository implements CRUDRepository <Pedido>{
                 pedido.setValorBruto(tabela.getDouble("valorbruto"));
                 pedido.setObervacao(tabela.getString("observacao"));
 
-                var clienteRepository = new ClienteRepository();
+                var clienteRepository = new ClienteDAO();
                 Cliente cliente = clienteRepository.buscarPorId(tabela.getInt("idcliente"));
                 pedido.setCliente(cliente);
             }
@@ -109,9 +109,9 @@ public class PedidoRepository implements CRUDRepository <Pedido>{
         String sql;
         ResultSet tabela;
 
-        sql = "SELECT * FROM " + MainRepository.SCHEMA + ".pedido WHERE idcliente = " + cliente.getIdCliente();
+        sql = "SELECT * FROM " + CreateDAO.SCHEMA + ".pedido WHERE idcliente = " + cliente.getIdCliente();
 
-        tabela = MainRepository.CONEXAO.query(sql);
+        tabela = CreateDAO.CONEXAO.query(sql);
 
         try {
             while (tabela.next()) {
@@ -143,10 +143,10 @@ public class PedidoRepository implements CRUDRepository <Pedido>{
     @Override
     public List<Pedido> buscarTodos() {
         List<Pedido> pedidos = new ArrayList<>();
-        String sql = "select * from " + MainRepository.SCHEMA + ".pedido order by idpedido";
+        String sql = "select * from " + CreateDAO.SCHEMA + ".pedido order by idpedido";
         ResultSet tabela;
 
-        tabela = MainRepository.CONEXAO.query(sql);
+        tabela = CreateDAO.CONEXAO.query(sql);
 
         try {
             while (tabela.next()) {
@@ -183,10 +183,10 @@ public class PedidoRepository implements CRUDRepository <Pedido>{
         ResultSet tabela;
         String sql;
 
-        sql = "SELECT * FROM " + MainRepository.SCHEMA + ".pedido WHERE pedido.dtemissao ";
+        sql = "SELECT * FROM " + CreateDAO.SCHEMA + ".pedido WHERE pedido.dtemissao ";
         sql += "BETWEEN '" + data1 + " 00:00:00' AND '" + data2 + " 23:59:59'";
 
-        tabela = MainRepository.CONEXAO.query(sql);
+        tabela = CreateDAO.CONEXAO.query(sql);
 
         try {
             while (tabela.next()) {
@@ -221,10 +221,10 @@ public class PedidoRepository implements CRUDRepository <Pedido>{
     public Pedido buscarUltimoPedidoCriado() {
 
         Pedido pedido = null;
-        String sql = "SELECT * FROM " + MainRepository.SCHEMA + ".pedido ORDER BY idpedido DESC LIMIT 1 ";
+        String sql = "SELECT * FROM " + CreateDAO.SCHEMA + ".pedido ORDER BY idpedido DESC LIMIT 1 ";
         ResultSet tabela;
 
-        tabela = MainRepository.CONEXAO.query(sql);
+        tabela = CreateDAO.CONEXAO.query(sql);
 
         try {
             if (tabela.next()) {
@@ -237,7 +237,7 @@ public class PedidoRepository implements CRUDRepository <Pedido>{
                 pedido.setValorBruto(tabela.getDouble("valorbruto"));
                 pedido.setObervacao(tabela.getString("observacao"));
 
-                var clienteRepository = new ClienteRepository();
+                var clienteRepository = new ClienteDAO();
                 Cliente cliente = clienteRepository.buscarPorId(tabela.getInt("idcliente"));
                 pedido.setCliente(cliente);
             }

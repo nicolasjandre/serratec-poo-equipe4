@@ -3,9 +3,9 @@ package com.serratec.domain.services;
 import com.serratec.domain.models.PedItem;
 import com.serratec.domain.models.Pedido;
 import com.serratec.domain.models.Produto;
-import com.serratec.domain.repository.PedItemRepository;
-import com.serratec.domain.repository.PedidoRepository;
-import com.serratec.domain.repository.ProdutoRepository;
+import com.serratec.domain.DAO.PedItemDAO;
+import com.serratec.domain.DAO.PedidoDAO;
+import com.serratec.domain.DAO.ProdutoDAO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +13,10 @@ import java.util.List;
 public class PedItemService {
 
     public void criarPedItemAposPedido(Pedido pedido, Double desconto, List<Double> qtdVendida) {
-        var pedidoRepository = new PedidoRepository();
-        var pedItemRepository = new PedItemRepository();
+        var pedidoDAO = new PedidoDAO();
+        var pedItemDAO = new PedItemDAO();
 
-        var ultimoPedido = pedidoRepository.buscarUltimoPedidoCriado();
+        var ultimoPedido = pedidoDAO.buscarUltimoPedidoCriado();
 
         for (Produto produto : pedido.getProdutos()) {
             var pedItem = new PedItem();
@@ -28,31 +28,31 @@ public class PedItemService {
             pedItem.setVlDesconto(desconto);
             pedItem.setQuantidade(qtdVendida.get(index));
 
-            pedItemRepository.incluir(pedItem);
+            pedItemDAO.incluir(pedItem);
         }
     }
 
     public void criarPedItemAposAlterarPedido(Pedido pedido) {
-        var pedItemRepository = new PedItemRepository();
+        var pedItemDAO = new PedItemDAO();
         var produtoService = new ProdutoService();
         List<Produto> produtos = new ArrayList<>();
 
         for (PedItem pedItem : pedido.getPedItems()) {
-            pedItemRepository.incluir(pedItem);
+            pedItemDAO.incluir(pedItem);
 
             Double estoqueAtual = pedItem.getProduto().getEstoque();
             Double qtdVendida = pedItem.getQuantidade();
             Double novoEstoque = estoqueAtual - qtdVendida;
             pedItem.getProduto().setEstoque(novoEstoque);
             produtos.add(pedItem.getProduto());
-            pedItemRepository.apagarPorId(pedItem.getIdPedItem());
+            pedItemDAO.apagarPorId(pedItem.getIdPedItem());
         }
 
         produtoService.atualizarEstoque(produtos);
 
     }
     public void apagarPorPedido(Pedido pedido) {
-        var pedItemRepository = new PedItemRepository();
+        var pedItemDAO = new PedItemDAO();
         var produtoService = new ProdutoService();
 
         List<Produto> produtos = new ArrayList<>();
@@ -65,21 +65,21 @@ public class PedItemService {
             Double novoEstoque = estoqueAtual + qtdVendida;
             pedItem.getProduto().setEstoque(novoEstoque);
             produtos.add(pedItem.getProduto());
-            pedItemRepository.apagarPorId(pedItem.getIdPedItem());
+            pedItemDAO.apagarPorId(pedItem.getIdPedItem());
         }
 
         produtoService.atualizarEstoque(produtos);
     }
     public List<PedItem> buscarPedItemsPorIdPedido(int idPedido) {
-        var pedItemsRepository = new PedItemRepository();
-        var pedidoRepository = new PedidoRepository();
-        var produtoRepository = new ProdutoRepository();
+        var pedItemsDAO = new PedItemDAO();
+        var pedidoDAO = new PedidoDAO();
+        var produtoDAO = new ProdutoDAO();
 
-        List<PedItem> pedItems = pedItemsRepository.buscarPedItemsPorIdPedido(idPedido);
+        List<PedItem> pedItems = pedItemsDAO.buscarPedItemsPorIdPedido(idPedido);
 
         for (PedItem pedItem : pedItems) {
-            var produto = produtoRepository.buscarPorId(pedItem.getProduto().getIdProduto());
-            var pedido = pedidoRepository.buscarPorId(pedItem.getPedido().getIdPedido());
+            var produto = produtoDAO.buscarPorId(pedItem.getProduto().getIdProduto());
+            var pedido = pedidoDAO.buscarPorId(pedItem.getPedido().getIdPedido());
             pedItem.setProduto(produto);
             pedItem.setPedido(pedido);
         }

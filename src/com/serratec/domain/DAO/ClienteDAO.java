@@ -1,4 +1,4 @@
-package com.serratec.domain.repository;
+package com.serratec.domain.DAO;
 
 import com.serratec.domain.models.Cliente;
 
@@ -8,22 +8,22 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClienteRepository implements CRUDRepository<Cliente> {
+public class ClienteDAO implements CrudDAO<Cliente> {
     PreparedStatement pInclusao = null;
 
-    public ClienteRepository() {
+    public ClienteDAO() {
         prepararSqlInclusao();
     }
 
     @Override
     public void prepararSqlInclusao() {
-        String sql = "insert into " + MainRepository.SCHEMA + ".cliente";
+        String sql = "insert into " + CreateDAO.SCHEMA + ".cliente";
         sql += " (nome, cpf, dtnascimento, endereco, telefone)";
         sql += " values ";
         sql += " (?, ?, ?, ?, ?)";
 
         try {
-            pInclusao = MainRepository.CONEXAO.getC().prepareStatement(sql);
+            pInclusao = CreateDAO.CONEXAO.getC().prepareStatement(sql);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -51,14 +51,14 @@ public class ClienteRepository implements CRUDRepository<Cliente> {
     @Override
     public void alterar(Cliente cliente) {
         String sql = "update " +
-                MainRepository.SCHEMA + ".cliente set " +
+                CreateDAO.SCHEMA + ".cliente set " +
                 "nome = '" + cliente.getNome() + "'" +
                 ", cpf = '" + cliente.getCpf() + "'" +
                 ", dtnascimento = '" + cliente.getDtNascimento() + "'" +
                 ", endereco = '" + cliente.getEndereco() + "' " +
                 ", telefone = '" + cliente.getTelefone() + "' " +
                 "where idcliente = " + cliente.getIdCliente();
-        MainRepository.CONEXAO.updateQuery(sql);
+        CreateDAO.CONEXAO.updateQuery(sql);
     }
 
     @Override
@@ -66,9 +66,9 @@ public class ClienteRepository implements CRUDRepository<Cliente> {
         var cliente = new Cliente();
         ResultSet tabela;
 
-        String sql = "select * from " + MainRepository.SCHEMA + ".cliente where idcliente = " + idCliente;
+        String sql = "select * from " + CreateDAO.SCHEMA + ".cliente where idcliente = " + idCliente;
 
-        tabela = MainRepository.CONEXAO.query(sql);
+        tabela = CreateDAO.CONEXAO.query(sql);
 
         try {
             if (tabela.next()) {
@@ -94,9 +94,9 @@ public class ClienteRepository implements CRUDRepository<Cliente> {
         var cliente = new Cliente();
         ResultSet tabela;
 
-        String sql = "select * from " + MainRepository.SCHEMA + ".cliente where cpf = '" + cpf + "'";
+        String sql = "select * from " + CreateDAO.SCHEMA + ".cliente where cpf = '" + cpf + "'";
 
-        tabela = MainRepository.CONEXAO.query(sql);
+        tabela = CreateDAO.CONEXAO.query(sql);
 
         try {
             if (tabela.next()) {
@@ -119,10 +119,10 @@ public class ClienteRepository implements CRUDRepository<Cliente> {
 
     @Override
     public void apagarPorId(int idCliente) {
-        String sql = "delete from " + MainRepository.SCHEMA + ".cliente" +
+        String sql = "delete from " + CreateDAO.SCHEMA + ".cliente" +
                 " where idcliente = " + idCliente;
 
-        MainRepository.CONEXAO.updateQuery(sql);
+        CreateDAO.CONEXAO.updateQuery(sql);
     }
 
     public List<Cliente> buscarPorNome(String nome) {
@@ -130,9 +130,9 @@ public class ClienteRepository implements CRUDRepository<Cliente> {
         String sql;
         ResultSet tabela;
 
-        sql = "SELECT * FROM " + MainRepository.SCHEMA + ".cliente WHERE LOWER(nome) ILIKE '%" + nome.toLowerCase() + "%'";
+        sql = "SELECT * FROM " + CreateDAO.SCHEMA + ".cliente WHERE LOWER(nome) ILIKE '%" + nome.toLowerCase() + "%'";
 
-        tabela = MainRepository.CONEXAO.query(sql);
+        tabela = CreateDAO.CONEXAO.query(sql);
 
         try {
             while (tabela.next()) {
@@ -162,10 +162,10 @@ public class ClienteRepository implements CRUDRepository<Cliente> {
     @Override
     public List<Cliente> buscarTodos() {
         List<Cliente> clientes = new ArrayList<>();
-        String sql = "select * from " + MainRepository.SCHEMA + ".cliente order by idcliente";
+        String sql = "select * from " + CreateDAO.SCHEMA + ".cliente order by idcliente";
         ResultSet tabela;
 
-        tabela = MainRepository.CONEXAO.query(sql);
+        tabela = CreateDAO.CONEXAO.query(sql);
 
         try {
             while (tabela.next()) {

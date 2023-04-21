@@ -2,38 +2,38 @@ package com.serratec.domain.services;
 
 import com.serratec.Main;
 import com.serratec.domain.models.Categoria;
-import com.serratec.domain.repository.CategoriaRepository;
+import com.serratec.domain.DAO.CategoriaDAO;
 import com.serratec.utils.Cor;
 
 import java.util.List;
 
 public class CategoriaService {
     public void criarCategoriasIniciais() {
-        var categoriaRepository = new CategoriaRepository();
-        List<Categoria> categorias = categoriaRepository.buscarTodos();
+        var categoriaDAO = new CategoriaDAO();
+        List<Categoria> categorias = categoriaDAO.buscarTodos();
         var categoria = new Categoria();
 
         if (categorias.size() == 0) {
             categoria.setDescricao("Tintas");
-            categoriaRepository.incluirCategoria(categoria);
+            categoriaDAO.incluirCategoria(categoria);
 
             categoria.setDescricao("Pisos e Revestimentos");
-            categoriaRepository.incluirCategoria(categoria);
+            categoriaDAO.incluirCategoria(categoria);
 
             categoria.setDescricao("Argamassas e Rejunte");
-            categoriaRepository.incluirCategoria(categoria);
+            categoriaDAO.incluirCategoria(categoria);
 
             categoria.setDescricao("Metais Sanitários");
-            categoriaRepository.incluirCategoria(categoria);
+            categoriaDAO.incluirCategoria(categoria);
 
             categoria.setDescricao("Aquecedores e Chuveiros");
-            categoriaRepository.incluirCategoria(categoria);
+            categoriaDAO.incluirCategoria(categoria);
         }
     }
 
     public Categoria bucarPorId() {
 
-            var categoriaRepository = new CategoriaRepository();
+            var categoriaDAO = new CategoriaDAO();
             int idCategoria = 0;
             char opcao = 'R';
             boolean continua;
@@ -58,7 +58,7 @@ public class CategoriaService {
 
                 Main.input.nextLine();
 
-                categoria = categoriaRepository.buscarPorId(idCategoria);
+                categoria = categoriaDAO.buscarPorId(idCategoria);
 
                 if (categoria.getDescricao() == null || categoria.getDescricao().isBlank()) continue;
 

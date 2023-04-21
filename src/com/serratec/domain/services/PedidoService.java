@@ -5,9 +5,9 @@ import com.serratec.domain.models.Cliente;
 import com.serratec.domain.models.PedItem;
 import com.serratec.domain.models.Pedido;
 import com.serratec.domain.models.Produto;
-import com.serratec.domain.repository.ClienteRepository;
-import com.serratec.domain.repository.PedidoRepository;
-import com.serratec.domain.repository.ProdutoRepository;
+import com.serratec.domain.DAO.ClienteDAO;
+import com.serratec.domain.DAO.PedidoDAO;
+import com.serratec.domain.DAO.ProdutoDAO;
 import com.serratec.utils.Cor;
 import com.serratec.utils.Menu;
 import com.serratec.utils.ResultadoBusca;
@@ -54,7 +54,7 @@ public class PedidoService implements CRUDService<Pedido> {
 
     @Override
     public void cadastrar() {
-        var pedidoRepository = new PedidoRepository();
+        var pedidoDAO = new PedidoDAO();
         var pedItemService = new PedItemService();
         var produtoService= new ProdutoService();
         Double desconto = 0.0;
@@ -83,7 +83,7 @@ public class PedidoService implements CRUDService<Pedido> {
         List<Double> qtdVendida = resultadoBusca.getQtdVendida();
 
         try {
-            pedidoRepository.incluir(pedido);
+            pedidoDAO.incluir(pedido);
             pedItemService.criarPedItemAposPedido(pedido, desconto, qtdVendida);
             produtoService.atualizarEstoque(pedido.getProdutos());
             Cor.fontGreen();
@@ -177,7 +177,7 @@ public class PedidoService implements CRUDService<Pedido> {
     @Override
     public void apagar() {
         var pedItemService = new PedItemService();
-        var pedidoRepository = new PedidoRepository();
+        var pedidoDAO = new PedidoDAO();
         Pedido pedido = new Pedido();
         int idPedido = 0;
         boolean continua;
@@ -189,7 +189,7 @@ public class PedidoService implements CRUDService<Pedido> {
             try {
                 idPedido = Main.input.nextInt();
 
-                pedido = pedidoRepository.buscarPorId(idPedido);
+                pedido = pedidoDAO.buscarPorId(idPedido);
 
                 if (pedido.getCliente().getNome() == null || pedido.getCliente().getNome().isEmpty()) {
                     throw new NullPointerException();
@@ -222,7 +222,7 @@ public class PedidoService implements CRUDService<Pedido> {
         } while (continua);
 
         pedItemService.apagarPorPedido(pedido);
-        pedidoRepository.apagarPorId(idPedido);
+        pedidoDAO.apagarPorId(idPedido);
         Main.input.nextLine();
     }
 
@@ -274,7 +274,7 @@ public class PedidoService implements CRUDService<Pedido> {
     }
 
     public Pedido buscarPedidoPorId() {
-        var pedidoRepository = new PedidoRepository();
+        var pedidoDAO = new PedidoDAO();
         var pedItemService = new PedItemService();
         var pedido = new Pedido();
         char opcao;
@@ -298,7 +298,7 @@ public class PedidoService implements CRUDService<Pedido> {
             } while (idPedido <= 0);
             Main.input.nextLine();
 
-            pedido = pedidoRepository.buscarPorId(idPedido);
+            pedido = pedidoDAO.buscarPorId(idPedido);
 
             if (pedido == null || pedido.getCliente() == null || pedido.getCliente().getNome().isBlank()) {
                 opcao = 'N';
@@ -436,7 +436,7 @@ public class PedidoService implements CRUDService<Pedido> {
     }
 
     public Pedido alterarCamposDeUmProdutoDoPedido(Pedido pedido) {
-        var produtoRepository = new ProdutoRepository();
+        var produtoDAO = new ProdutoDAO();
         var produto = new Produto();
         int codProduto;
         char opcao;
@@ -450,7 +450,7 @@ public class PedidoService implements CRUDService<Pedido> {
 
                 if (codProduto <= 0) throw new Exception();
 
-                produto = produtoRepository.buscarPorId(codProduto);
+                produto = produtoDAO.buscarPorId(codProduto);
 
                 if (produto.getDescricao() == null || produto.getDescricao().isBlank()) throw new Exception();
 
@@ -546,8 +546,8 @@ public class PedidoService implements CRUDService<Pedido> {
     }
 
     public Pedido trocarUmProdutoPorOutro(Pedido pedido) {
-        var produtoRepository = new ProdutoRepository();
-        List<Produto> produtos =  produtoRepository.buscarTodos();
+        var produtoDAO = new ProdutoDAO();
+        List<Produto> produtos =  produtoDAO.buscarTodos();
 
         if (produtos.size() == pedido.getProdutos().size()) {
             Cor.fontRed();
@@ -573,7 +573,7 @@ public class PedidoService implements CRUDService<Pedido> {
 
                 if (codProduto <= 0) throw new Exception();
 
-                produto = produtoRepository.buscarPorId(codProduto);
+                produto = produtoDAO.buscarPorId(codProduto);
 
                 if (produto.getDescricao() == null || produto.getDescricao().isBlank()) throw new Exception();
 
@@ -604,7 +604,7 @@ public class PedidoService implements CRUDService<Pedido> {
 
                 if (codProduto <= 0) throw new Exception();
 
-                novoProduto = produtoRepository.buscarPorId(codProduto);
+                novoProduto = produtoDAO.buscarPorId(codProduto);
 
                 if (produto.getDescricao() == null || produto.getDescricao().isBlank()) throw new Exception();
 
@@ -812,7 +812,7 @@ public class PedidoService implements CRUDService<Pedido> {
     }
 
     public Pedido removerUmProdutoDoPedido(Pedido pedido) {
-        var produtoRepository = new ProdutoRepository();
+        var produtoDAO = new ProdutoDAO();
         var produto = new Produto();
         int codProduto;
         char opcao;
@@ -826,7 +826,7 @@ public class PedidoService implements CRUDService<Pedido> {
 
                 if (codProduto <= 0) throw new Exception();
 
-                produto = produtoRepository.buscarPorId(codProduto);
+                produto = produtoDAO.buscarPorId(codProduto);
 
                 if (produto.getDescricao() == null || produto.getDescricao().isBlank()) throw new Exception();
 
@@ -878,7 +878,7 @@ public class PedidoService implements CRUDService<Pedido> {
     }
 
     public void salvarAlteracaoPedido(Pedido pedido) {
-        var pedidoRepository = new PedidoRepository();
+        var pedidoDAO = new PedidoDAO();
         var pedItemService = new PedItemService();
 
         if (pedido.getCliente() == null || pedido.getCliente().getNome() == null
@@ -896,7 +896,7 @@ public class PedidoService implements CRUDService<Pedido> {
         }
 
         try {
-            pedidoRepository.alterar(pedido);
+            pedidoDAO.alterar(pedido);
             pedItemService.apagarPorPedido(pedido);
             pedItemService.criarPedItemAposAlterarPedido(pedido);
 
@@ -914,11 +914,11 @@ public class PedidoService implements CRUDService<Pedido> {
 
     @Override
     public List<Pedido> buscarTodos() {
-        var pedidoRepository = new PedidoRepository();
+        var pedidoDAO = new PedidoDAO();
         var pedItemService = new PedItemService();
-        var clienteRepository = new ClienteRepository();
+        var clienteDAO = new ClienteDAO();
 
-        var pedidos = pedidoRepository.buscarTodos();
+        var pedidos = pedidoDAO.buscarTodos();
 
         for (Pedido pedido : pedidos) {
             List<Produto> produtos = new ArrayList<>();
@@ -929,7 +929,7 @@ public class PedidoService implements CRUDService<Pedido> {
                produtos.add(pedItem.getProduto());
             }
 
-            var cliente = clienteRepository.buscarPorId(pedido.getCliente().getIdCliente());
+            var cliente = clienteDAO.buscarPorId(pedido.getCliente().getIdCliente());
             pedido.setCliente(cliente);
             pedido.setProdutos(produtos);
         }
@@ -1043,8 +1043,8 @@ public class PedidoService implements CRUDService<Pedido> {
     }
 
     public List<Pedido> buscarPorPeriodo() {
-        var pedidoRepository = new PedidoRepository();
-        var clienteRepository = new ClienteRepository();
+        var pedidoDAO = new PedidoDAO();
+        var clienteDAO = new ClienteDAO();
         var pedItemService = new PedItemService();
 
         System.out.print("Escreva a data inicial dd/MM/yyyy: ");
@@ -1053,7 +1053,7 @@ public class PedidoService implements CRUDService<Pedido> {
         System.out.println("Escreva a data final dd/MM/yyyy: ");
         Date data2 = Util.pedirData();
 
-        var pedidos = pedidoRepository.buscarPorData(data1.toString(), data2.toString());
+        var pedidos = pedidoDAO.buscarPorData(data1.toString(), data2.toString());
 
         for (Pedido pedido : pedidos) {
             List<Produto> produtos = new ArrayList<>();
@@ -1064,7 +1064,7 @@ public class PedidoService implements CRUDService<Pedido> {
                 produtos.add(pedItem.getProduto());
             }
 
-            var cliente = clienteRepository.buscarPorId(pedido.getCliente().getIdCliente());
+            var cliente = clienteDAO.buscarPorId(pedido.getCliente().getIdCliente());
             pedido.setCliente(cliente);
             pedido.setProdutos(produtos);
         }
@@ -1073,13 +1073,13 @@ public class PedidoService implements CRUDService<Pedido> {
     }
 
     public List<Pedido> buscarPorCliente() {
-        var pedidoRepository = new PedidoRepository();
+        var pedidoDAO = new PedidoDAO();
         var pedItemService = new PedItemService();
         var clienteService = new ClienteService();
 
         var cliente = clienteService.buscarClientePeloNome();
 
-        var pedidos = pedidoRepository.buscarPorCliente(cliente);
+        var pedidos = pedidoDAO.buscarPorCliente(cliente);
 
         for (Pedido pedido : pedidos) {
             List<Produto> produtos = new ArrayList<>();

@@ -1,4 +1,4 @@
-package com.serratec.domain.repository;
+package com.serratec.domain.DAO;
 
 import com.serratec.domain.models.Produto;
 
@@ -8,22 +8,22 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProdutoRepository implements CRUDRepository<Produto> {
+public class ProdutoDAO implements CrudDAO<Produto> {
     PreparedStatement pInclusao = null;
 
-    public ProdutoRepository() {
+    public ProdutoDAO() {
         prepararSqlInclusao();
     }
 
     @Override
     public void prepararSqlInclusao() {
-        String sql = "insert into " + MainRepository.SCHEMA + ".produto";
+        String sql = "insert into " + CreateDAO.SCHEMA + ".produto";
         sql += " (descricao, idcategoria, estoque, vlcusto, vlvenda)";
         sql += " values ";
         sql += " (?, ?, ?, ?, ?)";
 
         try {
-            pInclusao = MainRepository.CONEXAO.getC().prepareStatement(sql);
+            pInclusao = CreateDAO.CONEXAO.getC().prepareStatement(sql);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -52,39 +52,39 @@ public class ProdutoRepository implements CRUDRepository<Produto> {
     @Override
     public void alterar(Produto produto) {
         String sql = "update " +
-                MainRepository.SCHEMA + ".produto set " +
+                CreateDAO.SCHEMA + ".produto set " +
                 "descricao = '" + produto.getDescricao() + "'" +
                 ", idcategoria = '" + produto.getIdCategoria() + "'" +
                 ", estoque = '" + produto.getEstoque() + "'" +
                 ", vlcusto = '" + produto.getVlCusto() + "' " +
                 ", vlvenda = '" + produto.getVlVenda() + "' " +
                 "where idproduto = " + produto.getIdProduto();
-        MainRepository.CONEXAO.updateQuery(sql);
+        CreateDAO.CONEXAO.updateQuery(sql);
     }
 
     public void atualizarEstoque(Produto produto) {
         String sql = "update " +
-                MainRepository.SCHEMA + ".produto set " +
+                CreateDAO.SCHEMA + ".produto set " +
                 "estoque = '" + produto.getEstoque() + "'" +
                 "where idproduto = " + produto.getIdProduto();
-        MainRepository.CONEXAO.updateQuery(sql);
+        CreateDAO.CONEXAO.updateQuery(sql);
     }
 
     @Override
     public void apagarPorId(int idProduto) {
-        String sql = "delete from " + MainRepository.SCHEMA + ".produto" +
+        String sql = "delete from " + CreateDAO.SCHEMA + ".produto" +
                 " where idproduto = " + idProduto;
 
-        MainRepository.CONEXAO.updateQuery(sql);
+        CreateDAO.CONEXAO.updateQuery(sql);
     }
 
     @Override
     public Produto buscarPorId(int idProduto) {
         Produto produto = null;
-        String sql = "SELECT * FROM " + MainRepository.SCHEMA + ".produto WHERE idproduto = " + idProduto;
+        String sql = "SELECT * FROM " + CreateDAO.SCHEMA + ".produto WHERE idproduto = " + idProduto;
         ResultSet tabela;
 
-        tabela = MainRepository.CONEXAO.query(sql);
+        tabela = CreateDAO.CONEXAO.query(sql);
 
         try {
             if (tabela.next()) {
@@ -109,10 +109,10 @@ public class ProdutoRepository implements CRUDRepository<Produto> {
     @Override
     public List<Produto> buscarTodos() {
         List<Produto> produtos = new ArrayList<>();
-        String sql = "select * from " + MainRepository.SCHEMA + ".produto order by idproduto";
+        String sql = "select * from " + CreateDAO.SCHEMA + ".produto order by idproduto";
         ResultSet tabela;
 
-        tabela = MainRepository.CONEXAO.query(sql);
+        tabela = CreateDAO.CONEXAO.query(sql);
 
         try {
             while (tabela.next()) {
