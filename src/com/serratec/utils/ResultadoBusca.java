@@ -14,9 +14,9 @@ public class ResultadoBusca {
         this.pedido = pedido;
     }
 
-    public ResultadoBusca(List<Produto> produtos, List<Double> valores) {
+    public ResultadoBusca(List<Produto> produtos, List<Double> qtdVendida) {
         this.produtos = produtos;
-        this.qtdVendida = valores;
+        this.qtdVendida = qtdVendida;
     }
 
     public List<Produto> getProdutos() {

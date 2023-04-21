@@ -12,6 +12,7 @@ public class Pedido {
     private String obervacao;
     private Cliente cliente;
     private List<Produto> produtos;
+    private List<PedItem> pedItems;
 
     public int getIdPedido() {
         return idPedido;
@@ -75,5 +76,13 @@ public class Pedido {
 
     public void setProdutos(List<Produto> produtos) {
         this.produtos = produtos;
+    }
+
+    public List<PedItem> getPedItems() {
+        return pedItems;
+    }
+
+    public void setPedItems(List<PedItem> pedItems) {
+        this.pedItems = pedItems;
     }
 }

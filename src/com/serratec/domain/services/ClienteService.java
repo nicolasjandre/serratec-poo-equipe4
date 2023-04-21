@@ -420,7 +420,10 @@ public class ClienteService implements CRUDService<Cliente> {
                     Util.imprimirLinha();
                     Cor.resetAll();
 
-                    System.out.println("Seja específico no nome do cliente até restar somente 1");
+                    if (clientes.size() != 1) {
+                        System.out.println("Seja específico no nome do cliente até restar somente 1");
+                    }
+
                 } else {
                     Util.imprimirLinha();
                     Cor.fontRed();

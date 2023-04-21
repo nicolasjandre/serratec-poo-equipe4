@@ -1,10 +1,7 @@
 package com.serratec;
 
 import com.serratec.domain.repository.MainRepository;
-import com.serratec.domain.services.CategoriaService;
-import com.serratec.domain.services.ClienteService;
-import com.serratec.domain.services.PedidoService;
-import com.serratec.domain.services.ProdutoService;
+import com.serratec.domain.services.*;
 import com.serratec.utils.Menu;
 
 import java.util.Scanner;
@@ -18,6 +15,7 @@ public class Main {
         var produtoService = new ProdutoService();
         var pedidoService = new PedidoService();
         var categoriaService = new CategoriaService();
+
         clienteService.criarClientesIniciais();
         categoriaService.criarCategoriasIniciais();
         produtoService.criarProdutosIniciais();

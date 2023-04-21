@@ -463,7 +463,6 @@ public class ProdutoService implements CRUDService<Produto>{
 
                 for (Produto prod : produtos) {
                     duplicado = false;
-
                     for (Produto impresso : jaImpresso) {
                         if (impresso.getIdProduto() == prod.getIdProduto()) {
                             duplicado = true;
@@ -473,7 +472,7 @@ public class ProdutoService implements CRUDService<Produto>{
                     if (!duplicado) {
                         jaImpresso.add(prod);
                         int index = produtos.indexOf(prod);
-                        produto.imprimirDadosProdutoComQtdVendida(qtdVendidaProduto.get(index));
+                        prod.imprimirDadosProdutoComQtdVendida(qtdVendidaProduto.get(index));
                     }
                 }
                 Util.imprimirLinha();
