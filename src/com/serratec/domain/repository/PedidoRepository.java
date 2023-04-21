@@ -19,9 +19,9 @@ public class PedidoRepository implements CRUDRepository <Pedido>{
     @Override
     public void prepararSqlInclusao() {
         String sql = "insert into " + MainRepository.SCHEMA + ".pedido";
-        sql += " (dtemissao, dtentrega, valortotal, observacao, idcliente)";
+        sql += " (dtemissao, dtentrega, valortotal, valorbruto, observacao, idcliente)";
         sql += " values ";
-        sql += " (?, ?, ?, ?, ?)";
+        sql += " (?, ?, ?, ?, ?, ?)";
 
         try {
             pInclusao = MainRepository.CONEXAO.getC().prepareStatement(sql);
@@ -36,8 +36,9 @@ public class PedidoRepository implements CRUDRepository <Pedido>{
             pInclusao.setDate(1, pedido.getDtEmissao());
             pInclusao.setDate(2, pedido.getDtEntrega());
             pInclusao.setDouble(3, pedido.getValorTotal());
-            pInclusao.setString(4, pedido.getObervacao());
-            pInclusao.setInt(5, pedido.getCliente().getIdCliente());
+            pInclusao.setDouble(4, pedido.getValorBruto());
+            pInclusao.setString(5, pedido.getObervacao());
+            pInclusao.setInt(6, pedido.getCliente().getIdCliente());
 
             pInclusao.executeUpdate();
 
@@ -57,6 +58,7 @@ public class PedidoRepository implements CRUDRepository <Pedido>{
                 "dtemissao = '" + pedido.getDtEmissao() + "'" +
                 ", dtentrega = '" + pedido.getDtEntrega() + "'" +
                 ", valortotal = '" + pedido.getValorTotal() + "'" +
+                ", valorbruto = '" + pedido.getValorBruto() + "'" +
                 ", observacao = '" + pedido.getObervacao() + "' " +
                 ", idcliente = '" + pedido.getCliente().getIdCliente() + "' " +
                 "where idpedido = " + pedido.getIdPedido();
@@ -68,7 +70,7 @@ public class PedidoRepository implements CRUDRepository <Pedido>{
         String sql = "delete from " + MainRepository.SCHEMA + ".pedido" +
                 " where idpedido = " + idPedido;
 
-        MainRepository.CONEXAO.query(sql);
+        MainRepository.CONEXAO.updateQuery(sql);
     }
 
     @Override
@@ -87,6 +89,7 @@ public class PedidoRepository implements CRUDRepository <Pedido>{
                 pedido.setDtEmissao(tabela.getDate("dtemissao"));
                 pedido.setDtEntrega(tabela.getDate("dtentrega"));
                 pedido.setValorTotal(tabela.getDouble("valortotal"));
+                pedido.setValorBruto(tabela.getDouble("valorbruto"));
                 pedido.setObervacao(tabela.getString("observacao"));
 
                 var clienteRepository = new ClienteRepository();
@@ -118,6 +121,7 @@ public class PedidoRepository implements CRUDRepository <Pedido>{
                 pedido.setIdPedido(tabela.getInt("idpedido"));
                 pedido.setDtEmissao(tabela.getDate("dtemissao"));
                 pedido.setDtEntrega(tabela.getDate("dtentrega"));
+                pedido.setValorBruto(tabela.getDouble("valorbruto"));
                 pedido.setValorTotal(tabela.getDouble("valortotal"));
                 pedido.setObervacao(tabela.getString("observacao"));
                 pedido.setCliente(cliente);
@@ -153,6 +157,7 @@ public class PedidoRepository implements CRUDRepository <Pedido>{
                 pedido.setDtEmissao(tabela.getDate("dtemissao"));
                 pedido.setDtEntrega(tabela.getDate("dtentrega"));
                 pedido.setValorTotal(tabela.getDouble("valortotal"));
+                pedido.setValorBruto(tabela.getDouble("valorbruto"));
                 pedido.setObervacao(tabela.getString("observacao"));
 
                 pedidos.add(pedido);
@@ -188,6 +193,7 @@ public class PedidoRepository implements CRUDRepository <Pedido>{
                 pedido.setDtEmissao(tabela.getDate("dtemissao"));
                 pedido.setDtEntrega(tabela.getDate("dtentrega"));
                 pedido.setValorTotal(tabela.getDouble("valortotal"));
+                pedido.setValorBruto(tabela.getDouble("valorbruto"));
                 pedido.setObervacao(tabela.getString("observacao"));
 
                 pedidos.add(pedido);
@@ -221,6 +227,7 @@ public class PedidoRepository implements CRUDRepository <Pedido>{
                 pedido.setDtEmissao(tabela.getDate("dtemissao"));
                 pedido.setDtEntrega(tabela.getDate("dtentrega"));
                 pedido.setValorTotal(tabela.getDouble("valortotal"));
+                pedido.setValorBruto(tabela.getDouble("valorbruto"));
                 pedido.setObervacao(tabela.getString("observacao"));
 
                 var clienteRepository = new ClienteRepository();

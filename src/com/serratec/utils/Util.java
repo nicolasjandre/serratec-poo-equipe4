@@ -21,6 +21,16 @@ public class Util {
 
         return localDate.format(formatter);
     }
+
+    public static String formatDateddMMyyyy(Date date) {
+        String inputDate = date.toString();
+
+        LocalDate localDate = LocalDate.parse(inputDate);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+        return localDate.format(formatter);
+    }
     public static void voltarAoMenu() {
         System.out.println("Pressione qualquer tecla para voltar ao menu");
         Main.input.nextLine();
@@ -55,7 +65,23 @@ public class Util {
         } while (continua);
 
         return new Date(utilDate.getTime());
+    }
 
+    public static void imprimirCabecalhoProduto() {
+        System.out.printf("%-13s %-35s %-20s %-30s %-70s %s\n",
+                "CÓDIGO", "DESCRIÇÃO", "CATEGORIA", "ESTOQUE", "PREÇO DE CUSTO", "PREÇO DE VENDA");
+    }
+
+    public static void imprimirCabecalhoProdutoComQtdVendida() {
+        System.out.printf("%-13s %-35s %-20s %-30s %-30s %-30s %s\n",
+                "CÓDIGO", "DESCRIÇÃO", "CATEGORIA", "ESTOQUE",
+                "PREÇO DE CUSTO", "PREÇO DE VENDA", "QUANTIDADE NO PEDIDO");
+    }
+
+    public static void imprimirCabecalhoProdutoComQtdVendidaEDesconto() {
+        System.out.printf("%-13s %-35s %-20s %-30s %-30s %-30s %-40s %-30s\n",
+                "CÓDIGO", "DESCRIÇÃO", "CATEGORIA", "ESTOQUE",
+                "PREÇO DE CUSTO", "PREÇO DE VENDA", "QUANTIDADE NO PEDIDO", "DESCONTO");
     }
 
     public static void imprimirSistemaIniciado() {
@@ -72,7 +98,9 @@ public class Util {
     }
 
     public static void imprimirLinha() {
-        System.out.println("_ ".repeat(96));
+        Cor.fontBlue();
+        System.out.println("_ ".repeat(126));
+        Cor.resetAll();
     }
 }
 

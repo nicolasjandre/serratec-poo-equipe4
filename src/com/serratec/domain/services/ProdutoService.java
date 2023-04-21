@@ -5,8 +5,10 @@ import com.serratec.domain.models.Produto;
 import com.serratec.domain.repository.ProdutoRepository;
 import com.serratec.utils.Cor;
 import com.serratec.utils.Menu;
+import com.serratec.utils.ResultadoBusca;
 import com.serratec.utils.Util;
 
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 
@@ -71,7 +73,7 @@ public class ProdutoService implements CRUDService<Produto>{
 
         } while (continua);
 
-          var  categoriaService = new CategoriaService();
+          var categoriaService = new CategoriaService();
 
           var categoria = categoriaService.bucarPorId();
 
@@ -95,11 +97,8 @@ public class ProdutoService implements CRUDService<Produto>{
             }
         } while (continua);
 
-
         System.out.print("Digite valor de custo do produto: ");
         Double vlcusto = 0.0;
-
-
 
         do {
             continua = false;
@@ -442,4 +441,158 @@ public class ProdutoService implements CRUDService<Produto>{
 
     }
 
+    public ResultadoBusca buscarProdutosPorIdParaIncluirNoPedido() {
+        ProdutoRepository produtoRepository = new ProdutoRepository();
+        List<Produto> produtos = new ArrayList<>();
+        List<Double> qtdVendidaProduto = new ArrayList<>();
+        var produto = new Produto();
+        boolean continua;
+        char opcao;
+        Double qtdVendida = 0.0;
+        int idProduto = 0;
+
+        do {
+            continua = true;
+
+            if (produtos.size() > 0) {
+                ArrayList<Produto> jaImpresso = new ArrayList<>();
+                boolean duplicado;
+
+                Util.imprimirLinha();
+                Util.imprimirCabecalhoProdutoComQtdVendida();
+
+                for (Produto prod : produtos) {
+                    duplicado = false;
+                    for (Produto impresso : jaImpresso) {
+                        if (impresso.getIdProduto() == prod.getIdProduto()) {
+                            duplicado = true;
+                            break;
+                        }
+                    }
+                    if (!duplicado) {
+                        jaImpresso.add(prod);
+                        int index = produtos.indexOf(prod);
+                        prod.imprimirDadosProdutoComQtdVendida(qtdVendidaProduto.get(index));
+                    }
+                }
+                Util.imprimirLinha();
+            }
+
+            do {
+                if (produtos.size() > 0) {
+                    System.out.println("Digite o código do próximo produto: ");
+                } else {
+                    System.out.print("Digite o código do produto: ");
+                }
+                try {
+                    idProduto = Main.input.nextInt();
+
+                    if (idProduto <= 0) throw new Exception();
+                } catch (Exception e) {
+                    Cor.fontRed();
+                    System.out.println("O código precisa ser um número inteiro maior que 0");
+                    Cor.resetAll();
+                    System.out.print("Digite novamente: ");
+                    Main.input.nextLine();
+                }
+            } while (idProduto <= 0);
+            Main.input.nextLine();
+
+            produto = produtoRepository.buscarPorId(idProduto);
+
+            if (produto.getDescricao() == null || produto.getDescricao().isBlank()) continue;
+
+            System.out.print("Quantos " + produto.getDescricao() + " deseja inserir no pedido?");
+            do {
+                try {
+                    qtdVendida = Main.input.nextDouble();
+
+                    if (qtdVendida <= 0) throw new Exception();
+                } catch (Exception e) {
+                    Cor.fontRed();
+                    System.out.println("A quantidade precisa ser um número inteiro maior que 0");
+                    Cor.resetAll();
+                    System.out.print("Digite novamente: ");
+                    Main.input.nextLine();
+                }
+            } while (qtdVendida <= 0);
+            Main.input.nextLine();
+
+            int quant = 0;
+            int index;
+            for (Produto prod : produtos) {
+                if (prod.getIdProduto() == produto.getIdProduto()) {
+                    index = produtos.indexOf(prod);
+                    quant += qtdVendidaProduto.get(index);
+                }
+            }
+            if (quant >= 1) {
+                System.out.println("Seu pedido já possui " + quant + " " + produto.getDescricao());
+                System.out.print("Deseja inserir " + qtdVendida + "? S/N");
+            } else {
+                System.out.print("Deseja escolher o produto " + produto.getDescricao() + "? S/N");
+            }
+
+            do {
+                String op = Main.input.nextLine().toUpperCase() + "R";
+                opcao = op.charAt(0);
+
+                switch (opcao) {
+                    case 'S' -> {
+                        boolean duplicado = false;
+
+                        for (Produto prod : produtos) {
+                            if (prod.getIdProduto() == produto.getIdProduto()) {
+                                index = produtos.indexOf(prod);
+                                qtdVendida += qtdVendidaProduto.get(index);
+                                qtdVendidaProduto.set(index, qtdVendida);
+                                duplicado = true;
+                            }
+                        }
+
+                        if (!duplicado) {
+                            produtos.add(produto);
+                            qtdVendidaProduto.add(qtdVendida);
+                        }
+
+                        System.out.println("Produto " + produto.getDescricao() + " adicionado!");
+                    }
+                    case 'N' -> {}
+                    default -> System.out.print("Opção inválida, digite novamente: ");
+                }
+            } while (opcao != 'S' && opcao != 'N');
+
+            if (produtos.size() > 0) {
+                System.out.print("Deseja inserir mais algum produto? S/N");
+
+                do {
+                    String op = Main.input.nextLine().toUpperCase() + "R";
+                    opcao = op.charAt(0);
+
+                    switch (opcao) {
+                        case 'S' -> {}
+                        case 'N' -> continua = false;
+                        default -> System.out.print("Opção inválida, digite novamente: ");
+                    }
+                } while (opcao != 'N' && opcao != 'S');
+            }
+
+        } while (continua);
+
+        for (Produto prod : produtos) {
+            int index = produtos.indexOf(prod);
+            Double estoqueqAtual = prod.getEstoque();
+            Double qtdVend = qtdVendidaProduto.get(index);
+            prod.setEstoque(estoqueqAtual - qtdVend);
+        }
+
+        return new ResultadoBusca(produtos, qtdVendidaProduto);
+    }
+    public void atualizarEstoque(List<Produto> produtos) {
+        var produtoRepository = new ProdutoRepository();
+
+        for (var produto : produtos) {
+            produtoRepository.atualizarEstoque(produto);
+        }
+    }
 }

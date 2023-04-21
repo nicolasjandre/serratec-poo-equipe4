@@ -1,6 +1,7 @@
 package com.serratec.domain.repository;
 
 import com.serratec.domain.models.PedItem;
+import com.serratec.domain.models.Pedido;
 import com.serratec.domain.models.Produto;
 
 import java.sql.PreparedStatement;
@@ -49,6 +50,48 @@ public class PedItemRepository implements CRUDRepository<PedItem> {
         }
     }
 
+    public List<PedItem> buscarPedItemsPorIdPedido(int idPedido) {
+        List<PedItem> pedItems = new ArrayList<>();
+
+        String sql = "SELECT * FROM " + MainRepository.SCHEMA + ".peditem ";
+        sql += "LEFT JOIN " + MainRepository.SCHEMA + ".pedido ON pedido.idpedido = ";
+        sql += "peditem.idpedido WHERE peditem.idpedido = " + idPedido + " and pedido.idpedido = " + idPedido;
+
+        ResultSet tabela;
+
+        tabela = MainRepository.CONEXAO.query(sql);
+
+        try {
+            while (tabela.next()) {
+                var pedItem = new PedItem();
+                var produto = new Produto();
+                var pedido = new Pedido();
+
+                pedido.setIdPedido(tabela.getInt("idpedido"));
+                produto.setIdProduto(tabela.getInt("idproduto"));
+
+                pedItem.setIdPedItem(tabela.getInt("idpeditem"));
+                pedItem.setQuantidade(tabela.getDouble("quantidade"));
+                pedItem.setVlUnitario(tabela.getDouble("vlunitario"));
+                pedItem.setVlDesconto(tabela.getDouble("vldesconto"));
+                pedItem.setPedido(pedido);
+                pedItem.setProduto(produto);
+
+                pedItems.add(pedItem);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                tabela.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return pedItems;
+    }
+
     @Override
     public void alterar(PedItem pedItem) {
         String sql = "update " +
@@ -67,12 +110,12 @@ public class PedItemRepository implements CRUDRepository<PedItem> {
         String sql = "delete from " + MainRepository.SCHEMA + ".peditem" +
                 " where idpeditem = " + idPedItem;
 
-        MainRepository.CONEXAO.query(sql);
+        MainRepository.CONEXAO.updateQuery(sql);
     }
 
     @Override
     public PedItem buscarPorId(int idPedItem) {
-        PedItem pedItem = null;
+        PedItem pedItem = new PedItem();
         String sql = "SELECT * FROM " + MainRepository.SCHEMA + ".peditem WHERE idpeditem = " + idPedItem;
         ResultSet tabela;
 
@@ -80,18 +123,18 @@ public class PedItemRepository implements CRUDRepository<PedItem> {
 
         try {
             if (tabela.next()) {
-                var pedidoRepository = new PedidoRepository();
                 var produto = new Produto();
-                var pedido = pedidoRepository.buscarPorId(tabela.getInt("idpedido"));
-                
-                pedItem = new PedItem();
+                var pedido = new Pedido();
 
-                pedItem.setProduto(produto);
-                pedItem.setPedido(pedido);
-                pedItem.setIdPedItem(tabela.getInt("idpedItem"));
-                pedItem.setQuantidade(tabela.getDouble("valortotal"));
+                pedido.setIdPedido(tabela.getInt("idpedido"));
+                produto.setIdProduto(tabela.getInt("idproduto"));
+
+                pedItem.setIdPedItem(tabela.getInt("idpeditem"));
+                pedItem.setQuantidade(tabela.getDouble("quantidade"));
                 pedItem.setVlUnitario(tabela.getDouble("vlunitario"));
                 pedItem.setVlDesconto(tabela.getDouble("vldesconto"));
+                pedItem.setPedido(pedido);
+                pedItem.setProduto(produto);
             }
 
             tabela.close();

@@ -8,14 +8,22 @@ public class Pedido {
     private Date dtEmissao;
     private Date dtEntrega;
     private Double valorTotal;
+    private Double valorBruto;
     private String obervacao;
     private Cliente cliente;
-    private double desconto;
     private List<Produto> produtos;
     private List<PedItem> pedItems;
 
     public int getIdPedido() {
         return idPedido;
+    }
+
+    public Double getValorBruto() {
+        return valorBruto;
+    }
+
+    public void setValorBruto(Double valorBruto) {
+        this.valorBruto = valorBruto;
     }
 
     public void setIdPedido(int idPedido) {
@@ -62,15 +70,6 @@ public class Pedido {
         this.cliente = cliente;
     }
 
-    public List<PedItem> getPedItems() {
-        return pedItems;
-    }
-
-    public void setPedItems(List<PedItem> pedItems) {
-        this.pedItems = pedItems;
-    }
-
-
     public List<Produto> getProdutos() {
         return produtos;
     }
@@ -79,11 +78,11 @@ public class Pedido {
         this.produtos = produtos;
     }
 
-    public double getDesconto() {
-        return desconto;
+    public List<PedItem> getPedItems() {
+        return pedItems;
     }
 
-    public void setDesconto(double desconto) {
-        this.desconto = desconto;
+    public void setPedItems(List<PedItem> pedItems) {
+        this.pedItems = pedItems;
     }
 }
