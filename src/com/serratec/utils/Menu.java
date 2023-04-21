@@ -68,7 +68,7 @@ public class Menu {
                            CÓDIGO %d
                 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
                 1) Alterar cliente - Cliente atual: %s
-                2) Alterar produtos
+                2) Alterar produtos %s
                 3) Alterar observação
                 4) Alterar data de emissão - %s
                 5) Alterar data de entrega - %s
@@ -78,6 +78,7 @@ public class Menu {
                 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
                 Digite sua opção:""", pedido.getIdPedido(),
                     pedido.getCliente().getNome() != null ? pedido.getCliente().getNome() : "\u001B[31mNenhum cliente inserido\u001B[0m",
+                    pedido.getProdutos().size() == 0 ? "- \u001B[31mNenhum produto inserido\u001B[0m" : "",
                     Util.formatDateddMMyyyy(pedido.getDtEmissao()),
                     Util.formatDateddMMyyyy(pedido.getDtEntrega()));
         } else {

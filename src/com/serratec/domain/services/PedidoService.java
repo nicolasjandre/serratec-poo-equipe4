@@ -5,6 +5,7 @@ import com.serratec.domain.models.Cliente;
 import com.serratec.domain.models.PedItem;
 import com.serratec.domain.models.Pedido;
 import com.serratec.domain.models.Produto;
+import com.serratec.domain.repository.ClienteRepository;
 import com.serratec.domain.repository.PedidoRepository;
 import com.serratec.domain.repository.ProdutoRepository;
 import com.serratec.utils.Cor;
@@ -15,6 +16,7 @@ import com.serratec.utils.Util;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.Iterator;
 import java.util.List;
 
 public class PedidoService implements CRUDService<Pedido> {
@@ -243,7 +245,7 @@ public class PedidoService implements CRUDService<Pedido> {
                     case '3' -> pedido = alterarObservacao(pedido);
                     case '4' -> pedido = alterarDataEmissaoPedido(pedido);
                     case '5' -> pedido = alterarDataEntregaPedido(pedido);
-                    case '6' -> imprimirPedido(pedido);
+                    case '6' -> imprimirPedidoComProdutos(pedido);
                     case '7' -> salvarAlteracaoPedido(pedido);
                     case '0' -> continua = false;
                     default -> {
@@ -252,7 +254,6 @@ public class PedidoService implements CRUDService<Pedido> {
                         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
                         Opção inválida, digite novamente""");
                         Cor.resetAll();
-                        continua = true;
                     }
                 }
             } else {
@@ -413,10 +414,16 @@ public class PedidoService implements CRUDService<Pedido> {
                 case '2' -> {
                     return trocarUmProdutoPorOutro(pedido);
                 }
-                case '3' -> {}
-                case '4' -> {}
-                case '5' -> {}
-                case '6' -> imprimirPedido(pedido);
+                case '3' -> {
+                    return removerUmProdutoDoPedido(pedido);
+                }
+                case '4' -> {
+                    return removerTodosOsProdutos(pedido);
+                }
+                case '5' -> {
+                    return alterarCamposDeUmProdutoDoPedido(pedido);
+                }
+                case '6' -> imprimirPedidoComProdutos(pedido);
                 case '0' -> {
                     return pedido;
                 }
@@ -425,6 +432,116 @@ public class PedidoService implements CRUDService<Pedido> {
             }
         } while (continua);
 
+        return pedido;
+    }
+
+    public Pedido alterarCamposDeUmProdutoDoPedido(Pedido pedido) {
+        var produtoRepository = new ProdutoRepository();
+        var produto = new Produto();
+        int codProduto;
+        char opcao;
+        int index = 0;
+
+        System.out.print("Digite o código do produto que deseja alterar: ");
+        do {
+            int cont = 0;
+            try {
+                codProduto = Main.input.nextInt();
+
+                if (codProduto <= 0) throw new Exception();
+
+                produto = produtoRepository.buscarPorId(codProduto);
+
+                if (produto.getDescricao() == null || produto.getDescricao().isBlank()) throw new Exception();
+
+                for (Produto prodPed : pedido.getProdutos()) {
+
+                    if (produto.getIdProduto() == prodPed.getIdProduto()) {
+                        index = pedido.getProdutos().indexOf(prodPed);
+                        cont++;
+                    }
+
+                }
+                if (cont == 0) throw new Exception();
+
+            } catch (Exception e) {
+                Cor.fontRed();
+                System.out.println("O código precisa ser um número inteiro maior que 0 e precisa estar no pedido");
+                Cor.resetAll();
+                System.out.print("Digite novamente: ");
+                codProduto = 0;
+                Main.input.nextLine();
+            }
+        } while (codProduto <= 0);
+        Main.input.nextLine();
+
+        System.out.print("Deseja alterar " + produto.getDescricao() + "? S/N");
+        do {
+            String op = Main.input.nextLine().toUpperCase() + "R";
+            opcao = op.charAt(0);
+
+            switch (opcao) {
+                case 'S' -> opcao = 'N';
+                case 'N' -> {
+                    return pedido;
+                }
+                default -> System.out.print("Opção inválida, digite novamente: ");
+            }
+        } while (opcao != 'N');
+
+        for (PedItem pedItem : pedido.getPedItems()) {
+            if (pedItem.getProduto().getIdProduto() == pedido.getProdutos().get(index).getIdProduto()) {
+
+                System.out.print("Digite o novo valor unitário: ");
+                pedItem.setVlUnitario(Util.pedirDoubleMaiorQueZero(
+                        "O valor unitario precisa ser maior ou igual a zero", 0, -1));
+
+                System.out.print("Digite o novo desconto (0 a 100%): ");
+                pedItem.setVlDesconto(Util.pedirDoubleMaiorQueZero(
+                        "O desconto deve estar entre 0 e 100", 0, 100));
+
+                System.out.print("Digite o nova quantidade deste produto no pedido: ");
+                pedItem.setQuantidade(Util.pedirDoubleMaiorQueZero(
+                        "A quantidade precisa ser maior ou igual a 0", 0, -1));
+            }
+        }
+
+        atualizarValoresPedido(pedido);
+        return pedido;
+    }
+
+    public Pedido removerTodosOsProdutos(Pedido pedido) {
+        char opcao;
+
+        Cor.fontRed();
+        System.out.println("ATENÇÃO!!!");
+        Cor.resetAll();
+
+        System.out.print("Tem certeza que deseja remover todos os produtos? S/N");
+        do {
+            String op = Main.input.nextLine().toUpperCase() + "R";
+            opcao = op.charAt(0);
+
+            switch (opcao) {
+                case 'S' -> opcao = 'N';
+                case 'N' -> {
+                    return pedido;
+                }
+                default -> System.out.print("Opção inválida, digite novamente: ");
+            }
+        } while (opcao != 'N');
+
+        for (Iterator<PedItem> iterator = pedido.getPedItems().iterator(); iterator.hasNext();) {
+            PedItem pedItem = iterator.next();
+            iterator.remove();
+        }
+
+        for (Iterator<Produto> iterator = pedido.getProdutos().iterator(); iterator.hasNext();) {
+            Produto produto = iterator.next();
+            iterator.remove();
+        }
+
+        pedido = atualizarValoresPedido(pedido);
         return pedido;
     }
 
@@ -446,7 +563,7 @@ public class PedidoService implements CRUDService<Pedido> {
         int index = 0;
         char opcao;
 
-        imprimirPedido(pedido);
+        imprimirPedidoComProdutos(pedido);
 
         System.out.print("Digite o código do produto que deseja trocar: ");
         do {
@@ -512,7 +629,6 @@ public class PedidoService implements CRUDService<Pedido> {
                 if (flag) continue;
 
                 System.out.print("Quantos " + novoProduto.getDescricao() + " deseja inserir no pedido?");
-
                 do {
                     try {
                         qtdProduto = Main.input.nextDouble();
@@ -615,6 +731,7 @@ public class PedidoService implements CRUDService<Pedido> {
 
         return pedido;
     }
+
     public Pedido atualizarValoresPedido(Pedido pedido) {
         Double valorTotal = 0.0;
         Double valorBruto = 0.0;
@@ -657,7 +774,7 @@ public class PedidoService implements CRUDService<Pedido> {
         return pedido;
     }
 
-    public void imprimirPedido(Pedido pedido) {
+    public void imprimirPedidoComProdutos(Pedido pedido) {
         String pedidoNumero = "PEDIDO NÚMERO " + pedido.getIdPedido();
         String emissao = "Emissão : " + Util.formatDateddMMyyyy(pedido.getDtEmissao());
         String entrega = "Entrega: " + Util.formatDateddMMyyyy(pedido.getDtEntrega());
@@ -692,27 +809,291 @@ public class PedidoService implements CRUDService<Pedido> {
         }
 
         System.out.println("Pressione qualquer tecla para sair da impressão do pedido");
+    }
+
+    public Pedido removerUmProdutoDoPedido(Pedido pedido) {
+        var produtoRepository = new ProdutoRepository();
+        var produto = new Produto();
+        int codProduto;
+        char opcao;
+        int index = 0;
+
+        System.out.print("Digite o código do produto que deseja remover: ");
+        do {
+            int cont = 0;
+            try {
+                codProduto = Main.input.nextInt();
+
+                if (codProduto <= 0) throw new Exception();
+
+                produto = produtoRepository.buscarPorId(codProduto);
+
+                if (produto.getDescricao() == null || produto.getDescricao().isBlank()) throw new Exception();
+
+                for (Produto prodPed : pedido.getProdutos()) {
+
+                    if (produto.getIdProduto() == prodPed.getIdProduto()) {
+                        index = pedido.getProdutos().indexOf(prodPed);
+                        cont++;
+                    }
+
+                }
+                if (cont == 0) throw new Exception();
+
+            } catch (Exception e) {
+                Cor.fontRed();
+                System.out.println("O código precisa ser um número inteiro maior que 0 e precisa estar no pedido");
+                Cor.resetAll();
+                System.out.print("Digite novamente: ");
+                codProduto = 0;
+                Main.input.nextLine();
+            }
+        } while (codProduto <= 0);
         Main.input.nextLine();
+
+        System.out.print("Deseja remover " + produto.getDescricao() + "? S/N");
+        do {
+            String op = Main.input.nextLine().toUpperCase() + "R";
+            opcao = op.charAt(0);
+
+            switch (opcao) {
+                case 'S' -> opcao = 'N';
+                case 'N' -> {
+                    return pedido;
+                }
+                default -> System.out.print("Opção inválida, digite novamente: ");
+            }
+        } while (opcao != 'N');
+        pedido.getProdutos().remove(index);
+
+        for (Iterator<PedItem> iterator = pedido.getPedItems().iterator(); iterator.hasNext();) {
+            PedItem pedItem = iterator.next();
+            if (pedItem.getProduto().getIdProduto() == produto.getIdProduto()) {
+                iterator.remove();
+            }
+        }
+
+        pedido = atualizarValoresPedido(pedido);
+        return pedido;
     }
 
     public void salvarAlteracaoPedido(Pedido pedido) {
+        var pedidoRepository = new PedidoRepository();
+        var pedItemService = new PedItemService();
 
+        if (pedido.getCliente() == null || pedido.getCliente().getNome() == null
+                || pedido.getCliente().getNome().isBlank()) {
+            Cor.fontRed();
+            System.out.println("Você precisa inserir um cliente para salvar o pedido.");
+            Cor.resetAll();
+            return;
+        } else if (pedido.getProdutos() == null
+                || pedido.getProdutos().size() == 0) {
+            Cor.fontRed();
+            System.out.println("Você precisa inserir ao menos um produto para salvar o pedido.");
+            Cor.resetAll();
+            return;
+        }
+
+        try {
+            pedidoRepository.alterar(pedido);
+            pedItemService.apagarPorPedido(pedido);
+            pedItemService.criarPedItemAposAlterarPedido(pedido);
+
+            Cor.fontGreen();
+            System.out.print("""
+                    _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+                     PEDIDO ALTERADO COM SUCESSO!!!
+                    _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+                    """);
+            Cor.resetAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public List<Pedido> buscarTodos() {
-        return null;
+        var pedidoRepository = new PedidoRepository();
+        var pedItemService = new PedItemService();
+        var clienteRepository = new ClienteRepository();
+
+        var pedidos = pedidoRepository.buscarTodos();
+
+        for (Pedido pedido : pedidos) {
+            List<Produto> produtos = new ArrayList<>();
+            List<PedItem> pedItems = pedItemService.buscarPedItemsPorIdPedido(pedido.getIdPedido());
+            pedido.setPedItems(pedItems);
+
+            for (PedItem pedItem : pedItems) {
+               produtos.add(pedItem.getProduto());
+            }
+
+            var cliente = clienteRepository.buscarPorId(pedido.getCliente().getIdCliente());
+            pedido.setCliente(cliente);
+            pedido.setProdutos(produtos);
+        }
+
+        return pedidos;
     }
 
     public void imprimirPedidosPorCliente() {
+        var pedidos = buscarPorCliente();
 
+        if (pedidos.size() == 0) {
+            Cor.fontRed();
+            System.out.println("Este cliente não possui nenhum pedido");
+            Cor.resetAll();
+            return;
+        }
+
+        if (Util.imprimirPedidoSemProdutos()) {
+            for (Pedido pedido : pedidos) {
+                imprimirPedidoSemProdutos(pedido);
+                Cor.backgroundGrey();
+                Util.imprimirLinha();
+                Cor.resetAll();
+            }
+        } else {
+            for (Pedido pedido : pedidos) {
+                imprimirPedidoComProdutos(pedido);
+                Cor.backgroundGrey();
+                Util.imprimirLinha();
+                Cor.resetAll();
+            }
+        }
     }
 
     public void imprimirPedidosPorPeriodo() {
+        var pedidos = buscarPorPeriodo();
 
+        if (pedidos.size() == 0) {
+            Cor.fontRed();
+            System.out.println("Não há pedidos neste período");
+            Cor.resetAll();
+            return;
+        }
+
+        if (Util.imprimirPedidoSemProdutos()) {
+            for (Pedido pedido : pedidos) {
+                imprimirPedidoSemProdutos(pedido);
+                Cor.backgroundGrey();
+                Util.imprimirLinha();
+                Cor.resetAll();
+            }
+        } else {
+            for (Pedido pedido : pedidos) {
+                imprimirPedidoComProdutos(pedido);
+                Cor.backgroundGrey();
+                Util.imprimirLinha();
+                Cor.resetAll();
+            }
+        }
     }
 
     public void imprimirTodosOsPedidos() {
+        var pedidos = buscarTodos();
 
+        if (pedidos.size() == 0) {
+            Cor.fontRed();
+            System.out.println("Não há pedidos cadastrados");
+            Cor.resetAll();
+            return;
+        }
+
+        if (Util.imprimirPedidoSemProdutos()) {
+            for (Pedido pedido : pedidos) {
+                imprimirPedidoSemProdutos(pedido);
+                Cor.backgroundGrey();
+                Util.imprimirLinha();
+                Cor.resetAll();
+            }
+        } else {
+            for (Pedido pedido : pedidos) {
+                imprimirPedidoComProdutos(pedido);
+                Cor.backgroundGrey();
+                Util.imprimirLinha();
+                Cor.resetAll();
+            }
+        }
+    }
+
+    public void imprimirPedidoSemProdutos(Pedido pedido) {
+        String pedidoNumero = "PEDIDO NÚMERO " + pedido.getIdPedido();
+        String emissao = "Emissão : " + Util.formatDateddMMyyyy(pedido.getDtEmissao());
+        String entrega = "Entrega: " + Util.formatDateddMMyyyy(pedido.getDtEntrega());
+        String cliente = "Cliente: " + pedido.getCliente().getNome();
+        String valorBruto = "Valor Bruto: R$" + pedido.getValorBruto();
+        String valorTotal = "Valor Total: R$" + pedido.getValorTotal();
+
+        Util.imprimirLinha();
+        System.out.printf("""
+                %-40s %-40s %-40s %-40s%n""",
+                pedidoNumero, emissao, entrega, cliente);
+        Util.imprimirLinha();
+        System.out.printf("""
+                %-30s %-30s%n""",
+                valorBruto, valorTotal);
+
+        if (pedido.getObervacao() != null && !pedido.getObervacao().isBlank()) {
+            Util.imprimirLinha();
+            System.out.println("Obs: " + pedido.getObervacao());
+            Util.imprimirLinha();
+        }
+    }
+
+    public List<Pedido> buscarPorPeriodo() {
+        var pedidoRepository = new PedidoRepository();
+        var clienteRepository = new ClienteRepository();
+        var pedItemService = new PedItemService();
+
+        System.out.print("Escreva a data inicial dd/MM/yyyy: ");
+        Date data1 = Util.pedirData();
+
+        System.out.println("Escreva a data final dd/MM/yyyy: ");
+        Date data2 = Util.pedirData();
+
+        var pedidos = pedidoRepository.buscarPorData(data1.toString(), data2.toString());
+
+        for (Pedido pedido : pedidos) {
+            List<Produto> produtos = new ArrayList<>();
+            List<PedItem> pedItems = pedItemService.buscarPedItemsPorIdPedido(pedido.getIdPedido());
+            pedido.setPedItems(pedItems);
+
+            for (PedItem pedItem : pedItems) {
+                produtos.add(pedItem.getProduto());
+            }
+
+            var cliente = clienteRepository.buscarPorId(pedido.getCliente().getIdCliente());
+            pedido.setCliente(cliente);
+            pedido.setProdutos(produtos);
+        }
+
+        return pedidos;
+    }
+
+    public List<Pedido> buscarPorCliente() {
+        var pedidoRepository = new PedidoRepository();
+        var pedItemService = new PedItemService();
+        var clienteService = new ClienteService();
+
+        var cliente = clienteService.buscarClientePeloNome();
+
+        var pedidos = pedidoRepository.buscarPorCliente(cliente);
+
+        for (Pedido pedido : pedidos) {
+            List<Produto> produtos = new ArrayList<>();
+            List<PedItem> pedItems = pedItemService.buscarPedItemsPorIdPedido(pedido.getIdPedido());
+            pedido.setPedItems(pedItems);
+
+            for (PedItem pedItem : pedItems) {
+                produtos.add(pedItem.getProduto());
+            }
+
+            pedido.setCliente(cliente);
+            pedido.setProdutos(produtos);
+        }
+
+        return pedidos;
     }
 }

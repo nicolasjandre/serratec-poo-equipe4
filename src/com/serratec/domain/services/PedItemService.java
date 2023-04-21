@@ -31,6 +31,26 @@ public class PedItemService {
             pedItemRepository.incluir(pedItem);
         }
     }
+
+    public void criarPedItemAposAlterarPedido(Pedido pedido) {
+        var pedItemRepository = new PedItemRepository();
+        var produtoService = new ProdutoService();
+        List<Produto> produtos = new ArrayList<>();
+
+        for (PedItem pedItem : pedido.getPedItems()) {
+            pedItemRepository.incluir(pedItem);
+
+            Double estoqueAtual = pedItem.getProduto().getEstoque();
+            Double qtdVendida = pedItem.getQuantidade();
+            Double novoEstoque = estoqueAtual - qtdVendida;
+            pedItem.getProduto().setEstoque(novoEstoque);
+            produtos.add(pedItem.getProduto());
+            pedItemRepository.apagarPorId(pedItem.getIdPedItem());
+        }
+
+        produtoService.atualizarEstoque(produtos);
+
+    }
     public void apagarPorPedido(Pedido pedido) {
         var pedItemRepository = new PedItemRepository();
         var produtoService = new ProdutoService();

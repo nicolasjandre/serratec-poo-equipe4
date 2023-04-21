@@ -350,6 +350,8 @@ public class ClienteService implements CRUDService<Cliente> {
         boolean continua;
         var cliente = new Cliente();
 
+        imprimirTodosOsClientes();
+
         do {
             System.out.print("Digite o CPF (use somente números): ");
 
