@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PedidoRepository implements CRUDRepository <Pedido>{
-
     PreparedStatement pInclusao = null;
     public PedidoRepository() {
         prepararSqlInclusao();
@@ -152,6 +151,9 @@ public class PedidoRepository implements CRUDRepository <Pedido>{
         try {
             while (tabela.next()) {
                 var pedido = new Pedido();
+                var cliente = new Cliente();
+
+                cliente.setIdCliente(tabela.getInt("idcliente"));
 
                 pedido.setIdPedido(tabela.getInt("idpedido"));
                 pedido.setDtEmissao(tabela.getDate("dtemissao"));
@@ -160,6 +162,7 @@ public class PedidoRepository implements CRUDRepository <Pedido>{
                 pedido.setValorBruto(tabela.getDouble("valorbruto"));
                 pedido.setObervacao(tabela.getString("observacao"));
 
+                pedido.setCliente(cliente);
                 pedidos.add(pedido);
             }
         } catch (Exception e) {
@@ -188,6 +191,9 @@ public class PedidoRepository implements CRUDRepository <Pedido>{
         try {
             while (tabela.next()) {
                 var pedido = new Pedido();
+                var cliente = new Cliente();
+
+                cliente.setIdCliente(tabela.getInt("idcliente"));
 
                 pedido.setIdPedido(tabela.getInt("idpedido"));
                 pedido.setDtEmissao(tabela.getDate("dtemissao"));
@@ -196,6 +202,7 @@ public class PedidoRepository implements CRUDRepository <Pedido>{
                 pedido.setValorBruto(tabela.getDouble("valorbruto"));
                 pedido.setObervacao(tabela.getString("observacao"));
 
+                pedido.setCliente(cliente);
                 pedidos.add(pedido);
             }
         } catch (Exception e) {

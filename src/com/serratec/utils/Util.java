@@ -102,6 +102,52 @@ public class Util {
         System.out.println("_ ".repeat(126));
         Cor.resetAll();
     }
+
+    public static boolean imprimirPedidoSemProdutos() {
+        char opcao;
+
+        System.out.print("""
+                1) Imprimir sem os produtos
+                2) Imprimir com os produtos""");
+
+        do {
+            String s = Main.input.nextLine().toUpperCase() + "R";
+            opcao = s.charAt(0);
+
+            switch (opcao) {
+                case '1' -> { return true; }
+                case '2' -> { return false; }
+                default -> System.out.println("Opção inválida, digite novamente: ");
+            }
+        } while (true);
+    }
+
+    public static Double pedirDoubleMaiorQueZero(String mensagemDeErro, int valorMin, int valorMax) {
+        Double dbReturn = 0.0;
+
+        do {
+            try {
+                dbReturn = Main.input.nextDouble();
+
+                if (valorMin != -1) {
+                    if (dbReturn < valorMin) throw new Exception();
+                }
+
+                if (valorMax != -1) {
+                    if (dbReturn > valorMax) throw new Exception();
+                }
+            } catch (Exception e) {
+                Cor.fontRed();
+                System.out.println(mensagemDeErro);
+                Cor.resetAll();
+                System.out.print("Digite novamente: ");
+                Main.input.nextLine();
+            }
+        } while (dbReturn < valorMin);
+        Main.input.nextLine();
+
+        return dbReturn;
+    }
 }
 
 
