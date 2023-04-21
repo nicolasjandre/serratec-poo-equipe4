@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PedidoRepository implements CRUDRepository <Pedido>{
-
     PreparedStatement pInclusao = null;
     public PedidoRepository() {
         prepararSqlInclusao();
