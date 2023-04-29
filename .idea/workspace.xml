@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="31b45699-f73c-46cb-a3cf-364d27d0611c" name="Changes" comment=":rocket: added colors to a most beautiful console">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/serratec/domain/repository/MainRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/serratec/domain/repository/MainRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/serratec/domain/services/ClienteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/serratec/domain/services/ClienteService.java" afterDir="false" />
+    <list default="true" id="31b45699-f73c-46cb-a3cf-364d27d0611c" name="Changes" comment=":rocket: changed patterns from repository to DAO">
+      <change afterPath="$PROJECT_DIR$/github/database.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/postgresql_42_6_0.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/postgresql_42_6_0.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,6 +23,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -37,6 +43,9 @@
       </UrlAndAccount>
     </option>
   </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -48,13 +57,18 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "/home/nicolas/Documents/Projects/IntelliJ/Equipe4-TrabalhoFinalPOO",
-    "project.structure.last.edited": "Problems",
+    "last_opened_file_path": "/home/nicolas/Documents/Projects/IntelliJ/Equipe4-TrabalhoFinalPOO/github",
+    "project.structure.last.edited": "Libraries",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.2",
     "settings.editor.selected.configurable": "Errors"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/github" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.serratec.Main" />
@@ -71,6 +85,10 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Main" />
+        <item itemvalue="Application.Main" />
+        <item itemvalue="Application.Main" />
+        <item itemvalue="Application.Main" />
         <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
@@ -147,7 +165,98 @@
       <option name="project" value="LOCAL" />
       <updated>1681927231607</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary=":bug: adding .idea">
+      <created>1681931254547</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1681931254547</updated>
+    </task>
+    <task id="LOCAL-00011" summary=":bug: adding .idea">
+      <created>1681931260884</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1681931260884</updated>
+    </task>
+    <task id="LOCAL-00012" summary=":bug: adding libraries+inspec profiles">
+      <created>1681931444537</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1681931444537</updated>
+    </task>
+    <task id="LOCAL-00013" summary=":rocket: added some PedidoService methods">
+      <created>1681947898161</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1681947898161</updated>
+    </task>
+    <task id="LOCAL-00014" summary=":rocket: added some PedidoService methods">
+      <created>1681947976051</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1681947976051</updated>
+    </task>
+    <task id="LOCAL-00015" summary=":rocket: created cadastrar in PedidoService">
+      <created>1682011270901</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1682011270901</updated>
+    </task>
+    <task id="LOCAL-00016" summary=":rocket: finishing PedidoService">
+      <created>1682044122672</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1682044122672</updated>
+    </task>
+    <task id="LOCAL-00017" summary=":rocket: finished PedidoService">
+      <created>1682056158128</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1682056158128</updated>
+    </task>
+    <task id="LOCAL-00018" summary=":rocket: finished PedidoService">
+      <created>1682056868679</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1682056868679</updated>
+    </task>
+    <task id="LOCAL-00019" summary=":rocket: added team members name">
+      <created>1682059399208</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1682059399208</updated>
+    </task>
+    <task id="LOCAL-00020" summary=":rocket: changed patterns from repository to DAO">
+      <created>1682061015967</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1682061015967</updated>
+    </task>
+    <task id="LOCAL-00021" summary=":rocket: changed patterns from repository to DAO">
+      <created>1682061128051</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1682061128051</updated>
+    </task>
+    <task id="LOCAL-00022" summary=":rocket: changed patterns from repository to DAO">
+      <created>1682061849969</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1682061849969</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -161,7 +270,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="master" />
+                        <option value="NicolasJandre" />
                       </list>
                     </value>
                   </entry>
@@ -181,7 +290,15 @@
     <MESSAGE value=":rocket: services and structure adjust" />
     <MESSAGE value=":rocket: finished ClienteService" />
     <MESSAGE value=":rocket: added colors to a most beautiful console" />
-    <option name="LAST_COMMIT_MESSAGE" value=":rocket: added colors to a most beautiful console" />
+    <MESSAGE value=":bug: adding .idea" />
+    <MESSAGE value=":bug: adding libraries+inspec profiles" />
+    <MESSAGE value=":rocket: added some PedidoService methods" />
+    <MESSAGE value=":rocket: created cadastrar in PedidoService" />
+    <MESSAGE value=":rocket: finishing PedidoService" />
+    <MESSAGE value=":rocket: finished PedidoService" />
+    <MESSAGE value=":rocket: added team members name" />
+    <MESSAGE value=":rocket: changed patterns from repository to DAO" />
+    <option name="LAST_COMMIT_MESSAGE" value=":rocket: changed patterns from repository to DAO" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
